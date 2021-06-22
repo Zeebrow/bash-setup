@@ -239,6 +239,7 @@ type yq &>/dev/null && . <(yq shell-completion bash)
 # ------------------------------ aliases -----------------------------
 
 unalias -a
+alias ll='ls -l'
 alias grep='grep -i --colour=auto'
 alias egrep='egrep -i --colour=auto'
 alias fgrep='fgrep -i --colour=auto'
