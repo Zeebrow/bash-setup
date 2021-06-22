@@ -3,6 +3,9 @@ case $- in
 *i*) ;; # interactive
 *) return ;; 
 esac
+# -------------------------------path---------------------------------
+export PATH=$PATH:$HOME/.local/bin/scripts
+
 
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
@@ -44,11 +47,11 @@ fi
 #export LESS_TERMCAP_us="$(tput bold; tput setaf 4;)"  # underline
 # whaever, use tput because clarity. Neglible speed hit.
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
-export LESS_TERMCAP_md=$(tput bold; tput setaf 6) # cyan
+export LESS_TERMCAP_md=$(tput bold; tput setaf 3) # headings, entry names, etc...
 export LESS_TERMCAP_me=$(tput sgr0)
-export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4) # yellow on blue
+export LESS_TERMCAP_so=$(tput bold; tput setaf 4) # bottom line
 export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
-export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7) # white
+export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 11) # options
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
 export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
