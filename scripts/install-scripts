@@ -1,7 +1,6 @@
 #!/bin/bash
 # 
 # install files in scripts direectory
-
 SCRIPTS=$HOME/.local/bin/scripts
 
 function debug () {
@@ -10,28 +9,26 @@ echo "calling script (\$0): $0"
 echo "realpath $(realpath $BASH_SOURCE)"
 this_script=${BASH_SOURCE/*\//}
 this_script=${this_script/\//}
-echo $this_script
+echo "this script: $this_script"
 }
+
+this_script=${BASH_SOURCE/*\//}
+this_script=${this_script/\//}
 
 if [ "$0" == "$BASH_SOURCE" ]; then
 	_bn="`pwd`/$(basename $0)"
 	_rp="$(realpath $0)"
 	[ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
-	#echo "this was run"
 	echo installing scripts
 	this_dir=`pwd`
-	echo $this_dir
 else
 	# echo "this was sourced"
 	this_dir=$(pwd)/scripts
-	echo $this_dir
 fi
-echo $this_dir
 
-exit
+echo installing scripts...
 if test -d !$SCRIPTS ; then mkdir -vp $SCRIPTS; fi
-
-for script in $(ls .); do
-	[ "$script" == "${0/\.\//}" ] && continue
-	cp -v "$script" "$SCRIPTS"
+for script in `ls $this_dir`; do
+	[ "$script" == "$this_script" ] && continue
+	cp -v $this_dir/$script $SCRIPTS
 done
