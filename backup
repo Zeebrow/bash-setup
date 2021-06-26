@@ -1,0 +1,37 @@
+#!/bin/bash
+# 
+# backup
+# create a backup of a file
+#
+# Helps for those situations where you want to save your work
+# but don't want a bunch of ".bkup" files hanging around.
+# 
+# Should be modified to be cronable, searching for .bkup.$(id)[0-9]*
+# to remove on boot
+
+test -z "$1" && printf "filename required.\nusage: backup file1 [file2] [file3]\n"
+SUFFIX=.bkup.$(date +%s)
+
+# remove all backed up files from current directory
+function clean () {
+	find . \
+		-maxdepth 1 \
+		-name "*.bkup.[0-9]*" \
+		-type f | xargs rm -vf 
+}
+
+function create_backup () {
+	_is_bkup='.bkup.[0-9]*'
+	[[ "$1" =~ $_is_bkup ]] && printf "$1 is a backup file.\n" && return 1
+	#echo $1
+	cp -v "$1" "$1$SUFFIX" 
+	return 0
+}
+
+test "$1" = '-c' && clean && exit
+
+for i in "$@"; do
+	create_backup $i
+done
+exit
+
