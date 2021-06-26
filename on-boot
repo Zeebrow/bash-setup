@@ -1,0 +1,5 @@
+#!/bin/bash
+/usr/bin/test -d /home/zeebrow/sandbox || exit 0 
+/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type f | xargs /usr/bin/rm -f
+/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type d | xargs /usr/bin/rmdir
+/usr/bin/rm -rf /home/zeebrow/sandbox/*
