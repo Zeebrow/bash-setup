@@ -208,13 +208,13 @@ __ps1() {
   test -n "$B" && B="$g($b$B$g)"
 
   if test -n "${ZSH_VERSION}"; then
-    local short="$u%n$g@$h%m$g:$w$dir$B$p$P$x "
-    local long="$g╔ $u%n$g@%m\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$g╔ $u%n$g@%m\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
+    local short="$V$u%n$g@$h%m$g:$w$dir$B$p$P$x "
+    local long="$V$g╔ $u%n$g@%m\h$g:$w$dir$B\n$g╚ $p$P$x "
+    local double="$V$g╔ $u%n$g@%m\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
   else
-    local short="$u\u$g@$h\h$g:$w$dir$B$p$P$x "
-    local long="$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
+    local short="$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
+    local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
+    local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
   fi
 
   if test ${#countme} -gt "${PROMPT_MAX}"; then
