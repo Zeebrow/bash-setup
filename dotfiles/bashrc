@@ -31,7 +31,7 @@ export GOPROXY=direct
 export CGO_ENABLED=0
 
 export MYREPOS="$HOME/repos/github.com/$USER"
-
+export SANDBOX="$HOME/sandbox"
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then
@@ -270,7 +270,7 @@ alias view='vi -R' # which is usually linked to vim
 which vim &>/dev/null && alias vi=vim
 
 alias repos='cd $MYREPOS'
-
+alias sandbox='cd $SANDBOX'
 # ----------------------------- functions ----------------------------
 
 clear() { printf "\e[H\e[2J"; } && export -f clear
