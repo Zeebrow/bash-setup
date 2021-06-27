@@ -173,6 +173,9 @@ __ps1() {
     local x='\[\033[0m\]'
   fi
 
+  # python virtualenv
+  test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
+
   if test "${EUID}" == 0; then
     P='#'
     if test -n "${ZSH_VERSION}"; then
