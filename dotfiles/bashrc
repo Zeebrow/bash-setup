@@ -47,7 +47,8 @@ fi
 #export LESS_TERMCAP_ue="" # "0m"
 #export LESS_TERMCAP_us="[4m"  # underline
 #export LESS_TERMCAP_us="$(tput bold; tput setaf 4;)"  # underline
-# whaever, use tput because clarity. Neglible speed hit.
+
+# whaever, use tput because it doesn't bleed colors. Neglible speed hit.
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
 export LESS_TERMCAP_md=$(tput bold; tput setaf 3) # headings, entry names, etc...
 export LESS_TERMCAP_me=$(tput sgr0)
@@ -74,25 +75,25 @@ fi
 
 # ------------------------------- path -------------------------------
 
-#pathappend() {
-#  for ARG in "$@"; do
-#    test -d "${ARG}" || continue
-#    PATH=${PATH//:${ARG}:/:}
-#    PATH=${PATH/#${ARG}:/}
-#    PATH=${PATH/%:${ARG}/}
-#    export PATH="${PATH:+"${PATH}:"}${ARG}"
-#  done
-#}
-#
-#pathprepend() {
-#  for ARG in "$@"; do
-#    test -d "${ARG}" || continue
-#    PATH=${PATH//:${ARG}:/:}
-#    PATH=${PATH/#${ARG}:/}
-#    PATH=${PATH/%:${ARG}/}
-#    export PATH="${ARG}${PATH:+":${PATH}"}"
-#  done
-#}
+pathappend() {
+  for ARG in "$@"; do
+    test -d "${ARG}" || continue
+    PATH=${PATH//:${ARG}:/:}
+    PATH=${PATH/#${ARG}:/}
+    PATH=${PATH/%:${ARG}/}
+    export PATH="${PATH:+"${PATH}:"}${ARG}"
+  done
+}
+
+pathprepend() {
+  for ARG in "$@"; do
+    test -d "${ARG}" || continue
+    PATH=${PATH//:${ARG}:/:}
+    PATH=${PATH/#${ARG}:/}
+    PATH=${PATH/%:${ARG}/}
+    export PATH="${ARG}${PATH:+":${PATH}"}"
+  done
+}
 
 # override as needed in .bashrc_{personal,private,work}
 # several utilities depend on SCRIPTS being in a github repo
@@ -100,22 +101,22 @@ export SCRIPTS=~/.local/bin/scripts
 mkdir -p "$SCRIPTS" &>/dev/null
 
 # remember last arg will be first in path
-#pathprepend \
-#  /usr/local/go/bin \
-#  ~/.local/bin \
-#  "$SCRIPTS" 
-#
-#pathappend \
+pathprepend \
+  /usr/local/go/bin \
+  ~/.local/bin \
+  "$SCRIPTS" 
+
+pathappend \
 #  /usr/local/opt/coreutils/libexec/gnubin \
 #  /mingw64/bin \
-#  /usr/local/bin \
-#  /usr/local/sbin \
+  /usr/local/bin \
+  /usr/local/sbin \
 #  /usr/games \
-#  /usr/sbin \
-#  /usr/bin \
-#  /snap/bin \
-#  /sbin \
-#  /bin
+  /usr/sbin \
+  /usr/bin \
+  /snap/bin \
+  /sbin \
+  /bin
 
 # ------------------------------ cdpath ------------------------------
 

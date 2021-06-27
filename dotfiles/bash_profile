@@ -1,4 +1,4 @@
 # .bash_profile is sourced once per login,
 # as opposed to once per invocation of bash
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:$HOME/.local/bin/scripts
+#export PATH=$PATH:/usr/local/go/bin
+#export PATH=$PATH:$HOME/.local/bin/scripts
