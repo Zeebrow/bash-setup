@@ -4,8 +4,8 @@ case $- in
 *) return ;; 
 esac
 # -------------------------------path---------------------------------
-export PATH=$PATH:$HOME/.local/bin/scripts
-
+# Friendly reminder that path should be set in bash_profile, 
+# which is only run once per login
 
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
@@ -29,6 +29,8 @@ export GOPATH=~/.local/share/go
 export GOBIN=~/.local/bin
 export GOPROXY=direct
 export CGO_ENABLED=0
+
+export MYREPOS="$HOME/repos/github.com/$USER"
 
 # ------------------------------- pager ------------------------------
 
@@ -266,6 +268,8 @@ alias temp='cd $(mktemp -d)'
 alias view='vi -R' # which is usually linked to vim
 
 which vim &>/dev/null && alias vi=vim
+
+alias repos='cd $MYREPOS'
 
 # ----------------------------- functions ----------------------------
 

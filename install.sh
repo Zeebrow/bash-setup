@@ -18,6 +18,10 @@ function install_scripts () {
 	source ./scripts/install-scripts
 }
 
+function install_dotfiles () {
+	source ./dotfiles/install-dotfiles
+}
+
 function install_bashrc (){
 	if test -f $HOME/.bashrc; then
 		cp $HOME/.bashrc $HOME/.bashrc.bkup.$(date +%s)
@@ -27,5 +31,6 @@ function install_bashrc (){
 }
 
 install_scripts
-install_bashrc
+install_dotfiles
+#install_bashrc
 
