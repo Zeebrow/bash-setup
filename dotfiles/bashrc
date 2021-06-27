@@ -108,12 +108,11 @@ pathprepend \
   ~/.local/bin \
   "$SCRIPTS" 
 
+
+# cant comment out lines here, or bash will whine
 pathappend \
-#  /usr/local/opt/coreutils/libexec/gnubin \
-#  /mingw64/bin \
   /usr/local/bin \
   /usr/local/sbin \
-#  /usr/games \
   /usr/sbin \
   /usr/bin \
   /snap/bin \
