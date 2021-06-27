@@ -109,10 +109,10 @@ pathprepend \
 pathappend \
 #  /usr/local/opt/coreutils/libexec/gnubin \
 #  /mingw64/bin \
-  /usr/local/bin \
+#  /usr/local/bin \
   /usr/local/sbin \
 #  /usr/games \
-  /usr/sbin \
+#  /usr/sbin \
   /usr/bin \
   /snap/bin \
   /sbin \
