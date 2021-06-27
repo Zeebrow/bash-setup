@@ -74,6 +74,8 @@ if which dircolors &>/dev/null; then
 fi
 
 # ------------------------------- path -------------------------------
+# Ubuntu default path - /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 
 pathappend() {
   for ARG in "$@"; do
@@ -109,10 +111,10 @@ pathprepend \
 pathappend \
 #  /usr/local/opt/coreutils/libexec/gnubin \
 #  /mingw64/bin \
-#  /usr/local/bin \
+  /usr/local/bin \
   /usr/local/sbin \
 #  /usr/games \
-#  /usr/sbin \
+  /usr/sbin \
   /usr/bin \
   /snap/bin \
   /sbin \
