@@ -137,14 +137,13 @@ shopt -s dotglob
 shopt -s extglob
 #shopt -s nullglob # bug kills completion for some
 #set -o noclobber
-
+set -o emacs
 # ------------------------------ history -----------------------------
 
 export HISTCONTROL=ignoreboth
 export HISTSIZE=5000
 export HISTFILESIZE=10000
 
-set -o vi
 shopt -s histappend
 
 # --------------------------- smart prompt ---------------------------
@@ -155,15 +154,19 @@ PROMPT_MAX=95
 __ps1() {
   local P='$'
 
-  if test -n "${ZSH_VERSION}"; then
-    local r='%F{red}'
-    local g='%F{black}'
-    local h='%F{blue}'
-    local u='%F{yellow}'
-    local p='%F{yellow}'
-    local w='%F{magenta}'
-    local b='%F{cyan}'
-    local x='%f'
+  if test "$(uname)" = "Darwin"; then
+    #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
+    local r='\[\033[31m\]'
+    local g=$(tput setaf 237)
+    #local g='\[\033[52m\]'
+    local gh='\[\033[52m\]'
+    local h=$(tput setaf 24)
+    #local h='\[\033[94m\]'
+    local u='\[\033[90m\]'
+    local p='\[\033[37m\]'
+    local w='\[\033[34m\]'
+    local b='\[\033[36m\]'
+    local x='\[\033[0m\]'
   else
     local r='\[\033[31m\]'
     local g='\[\033[30m\]'
@@ -174,6 +177,18 @@ __ps1() {
     local b='\[\033[36m\]'
     local x='\[\033[0m\]'
   fi
+
+#  if test -n "${ZSH_VERSION}"; then
+#    local r='%F{red}'
+#    local g='%F{black}'
+#    local h='%F{blue}'
+#    local u='%F{yellow}'
+#    local p='%F{yellow}'
+#    local w='%F{magenta}'
+#    local b='%F{cyan}'
+#    local x='%f'
+#  fi
+
 
   # python virtualenv
   test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
@@ -207,7 +222,7 @@ __ps1() {
   local countme="$USER@$(hostname):$dir($B)\$ "
 
   test "$B" = master -o "$B" = main && b=$r
-  test -n "$B" && B="$g($b$B$g)"
+  test -n "$B" && B="$b($b$B$b)"
 
   if test -n "${ZSH_VERSION}"; then
     local short="$V$u%n$g@$h%m$g:$w$dir$B$p$P$x "
@@ -249,12 +264,18 @@ type yq &>/dev/null && . <(yq shell-completion bash)
 # ------------------------------ aliases -----------------------------
 
 unalias -a
+
+if [ $(uname) == Darwin ]; then
+    alias ls='ls -Gh'
+else   
+    alias ls='ls -h --color=auto'
+fi
+
 alias ll='ls -l'
 alias grep='grep -i --colour=auto'
 alias egrep='egrep -i --colour=auto'
 alias fgrep='fgrep -i --colour=auto'
 alias curl='curl -L'
-alias ls='ls -h --color=auto'
 #alias '?'=duck
 #alias '??'=google
 #alias '???'=bing
