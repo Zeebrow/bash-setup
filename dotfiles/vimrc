@@ -1,0 +1,31 @@
+set nocompatible
+set number
+set ruler
+set mouse=a
+set tabstop=4
+set autoindent
+
+" I think these are unique to vim, not vi
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smarttab
+set smartindent
+"syntax enable
+colorscheme industry
+set textwidth=72
+
+" disable arrow keys (vi muscle memory)
+" because you're bold and daring
+noremap <up> :echoerr "Umm, use k instead"<CR>
+noremap <down> :echoerr "Umm, use j instead"<CR>
+noremap <left> :echoerr "Umm, use h instead"<CR>
+noremap <right> :echoerr "Umm, use l instead"<CR>
+inoremap <up> <NOP>
+inoremap <down> <NOP>
+inoremap <left> <NOP>
+inoremap <right> <NOP>
+
+call plug#begin('~/.vim/plugged')
+    Plug 'sheerun/vim-polyglot'
+call plug#end()
