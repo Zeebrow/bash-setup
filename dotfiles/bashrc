@@ -32,6 +32,11 @@ export CGO_ENABLED=0
 
 export MYREPOS="$HOME/repos/github.com/$USER"
 export SANDBOX="$HOME/sandbox"
+
+for lib in `ls "$HOME/.local/bin/libs"`; do
+  source "$HOME/.local/bin/scripts/libs/$lib"
+done
+
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then

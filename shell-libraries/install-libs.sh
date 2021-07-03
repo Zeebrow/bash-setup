@@ -1,14 +1,7 @@
 #!/bin/bash
 # 
 # install files in scripts direectory
-SCRIPTS=$HOME/.local/bin/scripts
-
-
-function compare () {
-  for file in `ls $SCRIPTS`; do
-    diff $file ./$file
-  done
-}
+LIBS_DIR=$HOME/.local/bin/scripts/libs
 
 function debug () {
 echo "bash_source: $BASH_SOURCE"
@@ -30,12 +23,12 @@ if [ "$0" == "$BASH_SOURCE" ]; then
 	this_dir=`pwd`
 else
 	# echo "this was sourced"
-	this_dir=$(pwd)/scripts
+	this_dir=$(pwd)/shell-libraries
 fi
 
 echo installing scripts...
-if test -d !$SCRIPTS ; then mkdir -vp $SCRIPTS; fi
-for script in `ls $this_dir`; do
-	[ "$script" == "$this_script" ] && continue
-	cp -v $this_dir/$script $SCRIPTS
+if test -d !$LIBS_DIR ; then mkdir -vp $LIBS_DIR; fi
+for lib in `ls $this_dir`; do
+	[ "$lib" == "$this_script" ] && continue
+	cp -v $this_dir/$lib $LIBS_DIR
 done
