@@ -25,11 +25,11 @@ if [ "$0" == "$BASH_SOURCE" ]; then
 	this_dir=`pwd`
 else
 	# echo "this was sourced"
-	this_dir=$(pwd)/scripts
+	this_dir=$(pwd)/vim
 fi
 
 backup ~/.vimrc
-cp $this_dir/vimrc $HOME/.vimrc
+cp -v $this_dir/vimrc $HOME/.vimrc
 
 #cp vimrc $HOME/.vimrc
 # somehow run PlugInstall
