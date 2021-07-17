@@ -14,7 +14,12 @@ _bn="`pwd`/$(basename $0)"
 _rp="$(realpath $0)"
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
+function initter () {
+	# TBD
+}
+
 function install_scripts () {
+	mkdir -vp $HOME/.local/scripts/bin
 	source ./scripts/install-scripts
 }
 
@@ -23,23 +28,17 @@ function install_dotfiles () {
 }
 
 function install_vimfiles () {
+	mkdir -vp $HOME/.vim
 	source ./vim/install-vim
 }
 
-function install_bashrc (){
-	if test -f $HOME/.bashrc; then
-		cp $HOME/.bashrc $HOME/.bashrc.bkup.$(date +%s)
-	fi
-	echo installing bashrc...
-	cp ./.bashrc $HOME
-}
-
 function install_ssh () {
+	mkdir -vp $HOME/.ssh
 	source ./ssh/install-ssh
 }
+
 
 install_scripts
 install_dotfiles
 install_vimfiles
-#install_bashrc
-
+install_ssh
