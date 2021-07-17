@@ -27,7 +27,7 @@ function initter () {
 }
 
 
-intter
+initter
 test -e $HOME/.ssh/config && backup $HOME/.ssh/config
 cp -v $this_dir/config $HOME/.ssh/config
 chmod 0755 $HOME/.ssh/config
