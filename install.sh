@@ -14,10 +14,6 @@ _bn="`pwd`/$(basename $0)"
 _rp="$(realpath $0)"
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
-function initter () {
-	# TBD
-}
-
 function install_scripts () {
 	mkdir -vp $HOME/.local/scripts/bin
 	source ./scripts/install-scripts
