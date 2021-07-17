@@ -34,6 +34,10 @@ function install_bashrc (){
 	cp ./.bashrc $HOME
 }
 
+function install_ssh () {
+	source ./ssh/install-ssh
+}
+
 install_scripts
 install_dotfiles
 install_vimfiles
