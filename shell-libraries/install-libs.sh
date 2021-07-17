@@ -27,7 +27,7 @@ else
 fi
 
 echo installing scripts...
-if test -d !$LIBS_DIR ; then mkdir -vp $LIBS_DIR; fi
+test -d $LIBS_DIR ||  mkdir -vp $LIBS_DIR
 for lib in `ls $this_dir`; do
 	[ "$lib" == "$this_script" ] && continue
 	cp -v $this_dir/$lib $LIBS_DIR

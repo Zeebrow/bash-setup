@@ -15,7 +15,7 @@ _rp="$(realpath $0)"
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
 function install_scripts () {
-	mkdir -vp $HOME/.local/scripts/bin
+	source ./shell-libraries/install-libs.sh
 	source ./scripts/install-scripts
 }
 

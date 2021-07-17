@@ -34,7 +34,8 @@ else
 fi
 
 echo installing scripts...
-if test -d !$SCRIPTS ; then mkdir -vp $SCRIPTS; fi
+test -d $SCRIPTS || mkdir -vp $SCRIPTS
+test -d $SCRIPTS/libs || mkdir -vp $SCRIPTS/libs
 for script in `ls $this_dir`; do
 	[ "$script" == "$this_script" ] && continue
 	cp -v $this_dir/$script $SCRIPTS
