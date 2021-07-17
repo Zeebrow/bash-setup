@@ -1,0 +1,32 @@
+#!/bin/bash
+# 
+# install bash dotfiles in $HOME
+
+echo "installing dotfiles for $USER..."
+
+# want backup
+test -d $HOME/.local/bin/scripts && export PATH=$PATH:$HOME/.local/bin/scripts
+
+this_script=${BASH_SOURCE/*\//}
+this_script=${this_script/\//}
+
+if [ "$0" == "$BASH_SOURCE" ]; then
+	_bn="`pwd`/$(basename $0)"
+	_rp="$(realpath $0)"
+	[ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
+	echo installing ssh config
+	this_dir=`pwd`
+else
+	# echo "this was sourced"
+	this_dir=$(pwd)/ssh
+fi
+
+function initter () {
+	test -d $HOME/.ssh || mkdir -v $HOME/.ssh
+	test -f $HOME/.ssh/id_rsa || echo ">>> YO: You don't have an ssh key yet. ssh-keygen -t rsa -p '' -f $HOME/.ssh/id_rsa , my dude."
+}
+
+
+intter
+test -e $HOME/.ssh/config && backup $HOME/.ssh/config
+cp -v $this_dir/config $HOME/.ssh/config
