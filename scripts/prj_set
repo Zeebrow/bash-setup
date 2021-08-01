@@ -1,0 +1,26 @@
+#!/bin/bash
+# Do the needful to set "current project"
+# Currently, changes html symlink to $1
+# TODO: prj-get
+
+TWITCH_HTML_HOME=/usr/share/nginx/twitch-project
+PRJS=()
+function get_prjs () {
+  # I think greeping for the """project name""" is unnecessarily (sp) complicated
+  local prj_name
+  for f in `ls -1 "$TWITCH_HTML_HOME"`; do
+    prj_name=`echo "$f" | grep project- | sed -e 's/^project-//; s/.html$//'`
+    PRJS+=($prj_name)
+  done
+}
+
+function set_prj () {
+  get_prjs
+  [[ "${PRJS[@]}" =~ "$1"  ]] && ln -sTvf $TWITCH_HTML_HOME/project-$1.html $TWITCH_HTML_HOME/current.html && return 0
+  echo "Project $1 not in projects: ${PRJS[@]}, exiting!"
+  exit 1
+}
+
+test -z "$1" && echo no arg && exit 1
+set_prj $1
+# get_prjs
