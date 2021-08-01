@@ -2,6 +2,10 @@
 # Do the needful to set "current project"
 # Currently, changes html symlink to $1
 # TODO: prj-get
+# TODO: sshable
+
+test "$HOSTNAME" = "homelab.mzborowski.com" || echo WHERE YOU AT LOL && exit 1
+
 
 TWITCH_HTML_HOME=/usr/share/nginx/twitch-project
 PRJS=()
