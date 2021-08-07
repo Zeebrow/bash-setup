@@ -168,6 +168,7 @@ __ps1() {
     local r='\[\033[31m\]'
     local g='\[\033[30m\]'
     local h='\[\033[34m\]'
+    # user
     local u='\[\033[33m\]'
     local p='\[\033[33m\]'
     local w='\[\033[35m\]'
