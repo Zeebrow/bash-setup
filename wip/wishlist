@@ -1,0 +1,33 @@
+#!/bin/bash
+# quickly add scripts i need to make
+# store them in a md file
+# commit it
+cwd=`pwd`
+
+function usage () {
+	printf "usage: wishlist [command you want to make]\n"
+	printf "You'll then enter a description to save along with your command\n"
+}
+
+[ ! -d "$MYREPOS" ] && echo 'MYREPOS not set or invalid path' && exit
+[ -z "$1" ] && usage && exit 1
+# drop into vi
+desc=$(mktemp).md
+#printf "\n" >> $desc
+printf "\n### Usage\n\n\`\`\`\nmake it quick\n\`\`\`\n" >> $desc
+
+printf "\n### Would Require\n\n" >> $desc
+
+printf "\n### Difficulty\n\n" >> $desc
+
+#echo "# Write a short wynopsis of what '$1' should do" >> $desc
+#echo "# "
+$EDITOR $desc
+
+wishlist="$MYREPOS/santapls/wishlist.md"
+printf "\n## $1\n\n" >> $wishlist
+cat $desc >> $wishlist
+cd "$MYREPOS/santapls"
+git commit -am $1 > /dev/null 2>&1
+git push > /dev/null 2>&1
+cd "$cwd"
