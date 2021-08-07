@@ -1,40 +1,103 @@
 #!/bin/bash
 
 # prints columns of text by index of array
+# what a mess
+
 
 h=`tput lines`
 w=`tput cols`
 buff=' '
-_total_to_print=255
-str=${1:-'tput setaf '}
-let _max_size=`echo $(( ${#str} + ${#buff} + ${#_total_to_print} ))`
-let _swatches_per_line=$(( $w/($_max_size) )) # number of cols
-let _lines_to_print=$(( $_total_to_print/$_swatches_per_line ))
-if [[ $(( $_total_to_print % $_swatches_per_line )) -gt 0 ]]; then
-	_lines_to_print=$(( $_lines_to_print + 1))
-fi
 
-function print_swatch () {
-        tput setaf $1
-        printf "$str$1"
+function tput_swatch () {
+  tput setaf $1
+  printf "$str$1"
 	printf "$buff%.0s" `seq $(( ${#_total_to_print} - ${#1} +1))`
 } 
-let _ct=0
-for c in `seq $_lines_to_print`; do
-	printf "\n"
-	for r in `seq $_swatches_per_line`; do
-		print_swatch $(( ( ( ( ($r-1) ) % $_swatches_per_line )*$_lines_to_print ) + c))
-		_ct=$(( $_ct + 1 ))
+
+function output_tput() {
+	_total_to_print=255
+	str=${1:-'tput setaf '}
+	let _max_size=`echo $(( ${#str} + ${#buff} + ${#_total_to_print} ))`
+	let _swatches_per_line=$(( $w/($_max_size) )) # number of cols
+	let _lines_to_print=$(( $_total_to_print/$_swatches_per_line ))
+	
+	if [[ $(( $_total_to_print % $_swatches_per_line )) -gt 0 ]]; then
+		_lines_to_print=$(( $_lines_to_print + 1))
+	fi
+	
+	let _ct=0
+	for c in `seq $_lines_to_print`; do
+		printf "\n"
+		for r in `seq $_swatches_per_line`; do
+			tput_swatch $(( ( ( ( ($r-1) ) % $_swatches_per_line )*$_lines_to_print ) + c))
+			_ct=$(( $_ct + 1 ))
+		done
 	done
-done
-printf "\n"
-tput sgr0
+	printf "\n"
+	tput sgr0
+}
+
+function output_esc() {
+	for i in `seq $1 $2`; do printf "\033[${i}m '\\\033[${i}m placeholder \\\033[0m' \033[0m \t"; done
+}
+
+function out_esc_fg() {
+	output_esc 30 39
+	output_esc 90 99
+}
+
+function out_esc_bg() {
+	output_esc 40 49
+	output_esc 100 108
+}
+
+function output_esc_old() {
+	str='\\\033[000m'${1:-placeholder}'\\\033[0m'
+	echo -e ${str}
+	let _max_size=`echo $(( ${#str} + ${#buff} + ${#_total_to_print} ))`
+	let _swatches_per_line=$(( $w/($_max_size) ))
+	let _lines_to_print=$(( $_total_to_print/$_swatches_per_line ))
+	
+	if [[ $(( $_total_to_print % $_swatches_per_line )) -gt 0 ]]; then
+		_lines_to_print=$(( $_lines_to_print + 1))
+	fi
+	
+	let _ct=0
+	for c in `seq $_lines_to_print`; do
+		printf "\n"
+		for r in `seq $_swatches_per_line`; do
+			printf "\033[${i}m '\\\033[${i}m${str}\\\033[0m' \033[0m"
+			_ct=$(( $_ct + 1 ))
+		done
+	done
+	printf "\n"
+	tput sgr0
+
+}
+
+function output_esc_all() {
+	printf "\nForegrounds:\n\n"
+	out_esc_fg 
+	printf "\n\nBackgrounds:\n\n"
+	out_esc_bg
+	printf "\n\n"
+}
 
 function debug(){
-echo
-echo "swatch str: '$str' ($_max_size chars)"
-echo "swatches per line: $_swatches_per_line"
-echo "lines to print: $_lines_to_print"
-echo "cols: $w"
-echo "count: $_ct"
+	echo
+	echo "swatch str: '$str' ($_max_size chars)"
+	echo "swatches per line: $_swatches_per_line"
+	echo "lines to print: $_lines_to_print"
+	echo "cols: $w"
+	echo "count: $_ct"
 }
+
+# main
+
+outfmt=$1
+[[ "$outfmt" =~ "tput" ]] && output_tput && exit 0
+[[ "$outfmt" =~ "esc" ]] && output_esc_all && exit 0
+
+
+
+
