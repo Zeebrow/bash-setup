@@ -166,8 +166,10 @@ __ps1() {
     local x='\[\033[0m\]'
   else
     local r='\[\033[31m\]'
-    local g='\[\033[30m\]'
-    local h='\[\033[34m\]'
+    # '@'
+    local g='\[\033[91m\]'
+    # hostname
+    local h='\[\033[91m\]'
     # user
     local u='\[\033[33m\]'
     local p='\[\033[33m\]'
