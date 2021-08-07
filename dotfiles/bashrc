@@ -44,14 +44,6 @@ if test -x /usr/bin/lesspipe; then
   export LESSCLOSE="/usr/bin/lesspipe %s %s";
 fi
 
-#export LESS_TERMCAP_mb="[35m" # magenta
-#export LESS_TERMCAP_md="[33m" # yellow
-#export LESS_TERMCAP_me="" # "0m"
-#export LESS_TERMCAP_se="" # "0m"
-#export LESS_TERMCAP_so="[34m" # blue
-#export LESS_TERMCAP_ue="" # "0m"
-#export LESS_TERMCAP_us="[4m"  # underline
-#export LESS_TERMCAP_us="$(tput bold; tput setaf 4;)"  # underline
 
 # whaever, use tput because it doesn't bleed colors. Neglible speed hit.
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
@@ -157,7 +149,7 @@ PROMPT_LONG=50
 PROMPT_MAX=95
 
 __ps1() {
-  local P='$'
+  local P=\$
 
   if test "$(uname)" = "Darwin"; then
     #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
@@ -182,17 +174,6 @@ __ps1() {
     local b='\[\033[36m\]'
     local x='\[\033[0m\]'
   fi
-
-#  if test -n "${ZSH_VERSION}"; then
-#    local r='%F{red}'
-#    local g='%F{black}'
-#    local h='%F{blue}'
-#    local u='%F{yellow}'
-#    local p='%F{yellow}'
-#    local w='%F{magenta}'
-#    local b='%F{cyan}'
-#    local x='%f'
-#  fi
 
 
   # python virtualenv
