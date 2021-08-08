@@ -9,15 +9,13 @@ wlhome=$MYREPOS/santapls
 wishes=(`grep "^## " "$wishlist" | tr -d "## "`)
 
 function usage () {
-	printf "usage: wishlist [command you want to make]\n"
-	printf "You'll then enter a description to save along with your command\n"
+	printf "usage: wishlist [make | get | del | update]\n"
 }
 
 [ ! -d "$MYREPOS" ] && echo 'MYREPOS not set or invalid path' && exit
 [  -z "$1" ] && usage && exit 1
 
 function create_wish() {
-
 	printf "\n## %s\n" "$1"  >> "$desc"
 	cat <<-"EOF">>"$desc"
 		### Usage
@@ -36,18 +34,55 @@ function create_wish() {
 	echo "Created wish for '$1'"
 }
 
-
 function get_wish() { 
+	[ -z "$1" ] && echo "No wish supplied!" && usage && exit 1
 	# prints line number of the wish we want to read
 	wishpos() { echo $(grep -n "^## $1" "$wishlist" | cut -d':' -f1 ); }
 	# prints line number of the wish after the one we want to read
 	nextwish() { echo $(tail +$(wishpos "$1") "$wishlist" | grep -n "^## " | grep -v "$1" | cut -d':' -f1 | head -1); }
 	# print wish content
-	sed -n "$(wishpos $1),$(( $(nextwish $1) + $(wishpos $1) ))p" "$wishlist"
+	# -2 for the heading content
+	sed -n "$(wishpos $1),$(( $(nextwish $1) + $(wishpos $1) - 2 ))p" "$wishlist"
 
 }
-function update_wish() { echo "NOOP update wish '$1' from md"; }
-function del_wish() {	echo "NOOP delete wish '$1' from md"; }
+
+function list_wishes() {
+	# wishes are always one word, no whitespace
+	echo "${wishes[@]}"
+}
+
+function update_wish() { 
+	# need delete first
+	return
+	set -x
+	updated=`mktemp`
+	get_wish "$1" > "$updated"
+	vim "$updated"
+	
+	rm "$updated"
+}
+function del_wish() {		
+	function usage() {
+		echo wish del wish [wish2 [wish3 [...]]]
+		exit 1
+	}
+
+	if [ "$#" -gt 0 ]; then
+		read -p "Do you really want to delete $# wishes? (y/N): " confirm
+		[[ $confirm == [yY] ]] || exit 0
+	fi
+	while [ "$#" -gt 0 ]
+	do
+		# prints line number of the wish we want to read
+		wishpos() { echo $(grep -n "^## $1" "$wishlist" | cut -d':' -f1 ); }
+		# prints line number of the wish after the one we want to read
+		nextwish() { echo $(tail +$(wishpos "$1") "$wishlist" | grep -n "^## " | grep -v "$1" | cut -d':' -f1 | head -1); }
+		# print wish content
+		sed -dn "$(wishpos $1),$(( $(nextwish $1) + $(wishpos $1) ))d" "$wishlist"
+		echo "Deleted $1."
+		shift
+	done
+}
 
 function setup () {
 	cat "$desc" >> "$wishlist"
@@ -73,8 +108,22 @@ function debug() {
 	echo "descfile: $desc"
 }
 
-get_wish "$1"
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		make) shift; make_wish "$@"; exit 0 ;;
+		list) list_wishes; exit 0;;
+		get) shift; get_wish "$@" ;;
+		del) shift; del_wish "$@" ;;
+		*) usage; exit 1;;
+	esac
+done
 
+
+
+list_wishes
+
+get_wish "$1"
 # create_wish "$1"
 # read_wish "$1"
 # update_wish "$1"
