@@ -1,7 +1,7 @@
 set nocompatible
 set number
 set ruler
-set mouse=a
+" set mouse=a
 set tabstop=2
 set autoindent
 
