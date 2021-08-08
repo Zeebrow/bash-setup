@@ -2,7 +2,11 @@
 # quickly add scripts i need to make
 # store them in a md file
 # commit it
-cwd=`pwd`
+set -e
+wishlist="$MYREPOS/santapls/README.md"
+desc=$(mktemp).md
+wlhome=$MYREPOS/santapls
+wishes=(`grep "^## " "$wishlist" | tr -d "## "`)
 
 function usage () {
 	printf "usage: wishlist [command you want to make]\n"
@@ -10,24 +14,72 @@ function usage () {
 }
 
 [ ! -d "$MYREPOS" ] && echo 'MYREPOS not set or invalid path' && exit
-[ -z "$1" ] && usage && exit 1
-# drop into vi
-desc=$(mktemp).md
-#printf "\n" >> $desc
-printf "\n### Usage\n\n\`\`\`\nmake it quick\n\`\`\`\n" >> $desc
+[  -z "$1" ] && usage && exit 1
 
-printf "\n### Would Require\n\n" >> $desc
+function create_wish() {
 
-printf "\n### Difficulty\n\n" >> $desc
+	printf "\n## %s\n" "$1"  >> "$desc"
+	cat <<-"EOF">>"$desc"
+		### Usage
 
-#echo "# Write a short wynopsis of what '$1' should do" >> $desc
-#echo "# "
-$EDITOR $desc
+		```
+		make it kwik
+		```
 
-wishlist="$MYREPOS/santapls/wishlist.md"
-printf "\n## $1\n\n" >> $wishlist
-cat $desc >> $wishlist
-cd "$MYREPOS/santapls"
-git commit -am $1 > /dev/null 2>&1
-git push > /dev/null 2>&1
-cd "$cwd"
+		### Would Require
+	
+		### Difficulty
+	
+		EOF
+
+	"$EDITOR" "$desc"
+	echo "Created wish for '$1'"
+}
+
+
+function get_wish() { 
+	# prints line number of the wish we want to read
+	wishpos() { echo $(grep -n "^## $1" "$wishlist" | cut -d':' -f1 ); }
+	# prints line number of the wish after the one we want to read
+	nextwish() { echo $(tail +$(wishpos "$1") "$wishlist" | grep -n "^## " | grep -v "$1" | cut -d':' -f1 | head -1); }
+	# print wish content
+	sed -n "$(wishpos $1),$(( $(nextwish $1) + $(wishpos $1) ))p" "$wishlist"
+
+}
+function update_wish() { echo "NOOP update wish '$1' from md"; }
+function del_wish() {	echo "NOOP delete wish '$1' from md"; }
+
+function setup () {
+	cat "$desc" >> "$wishlist"
+	mkdir "$wlhome/prjs/$1" 2>/dev/null
+	touch "$wlhome/prjs/$1/README.md"
+	cat "$desc" | sed 's/^#//' >> "$wlhome/prjs/$1/README.md"
+}
+
+function commit () {
+	set -e
+	cwd=$(pwd)
+	cd "$MYREPOS/santapls"
+	git commit -am "$1" > /dev/null 2>&1
+	git push > /dev/null 2>&1
+	cd "$cwd"
+}
+
+function cleanup () {
+	rm "$desc"
+}
+
+function debug() {
+	echo "descfile: $desc"
+}
+
+get_wish "$1"
+
+# create_wish "$1"
+# read_wish "$1"
+# update_wish "$1"
+# del_wish "$1"
+# setup "$1"
+# debug "$1"
+#commit
+#cleanup
