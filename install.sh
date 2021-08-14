@@ -14,6 +14,10 @@ _bn="`pwd`/$(basename $0)"
 _rp="$(realpath $0)"
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
+function preflight() {
+	echo
+}
+
 function prep_home () {
 	mkdir -vp "$HOME/.local/bin/scripts"
 	mkdir -vp "$HOME/.local/bin/scripts/lib"
@@ -44,9 +48,21 @@ function install_ssh () {
 	source ./ssh/install-ssh
 }
 
+function do_diffs () {
+	let rtns=0
+	install_dotfiles diff
+	rtns=$((rtns + "$?"))
+	# addl. diffs here
+	[ "$rtns" -gt 0 ] && printf "Differences in files found, continue? (y/N): "; read continue
+	[ "$continue" != "y" ] && echo pce && exit 1
+}
 
-install_scripts
-install_dotfiles
-install_vimfiles
-# "just no"
-#install_ssh
+function do_installs() {
+	install_dotfiles install
+	install_scripts
+	install_vimfiles
+}
+
+do_diffs
+do_installs
+exit 0

@@ -2,19 +2,11 @@
 # 
 # install bash dotfiles in $HOME
 
+[ -f ../shell-libraries/log.sh ] &&  source ../shell-libraries/log.sh
 echo "installing dotfiles for $USER..."
 
 # want backup
 test -d $HOME/.local/bin/scripts && export PATH=$PATH:$HOME/.local/bin/scripts
-
-function debug () {
-	echo "bash_source: $BASH_SOURCE"
-	echo "calling script (\$0): $0"
-	echo "realpath $(realpath $BASH_SOURCE)"
-	this_script=${BASH_SOURCE/*\//}
-	this_script=${this_script/\//}
-	echo "this script: $this_script"
-}
 
 this_script=${BASH_SOURCE/*\//}
 this_script=${this_script/\//}
@@ -30,8 +22,38 @@ else
 	this_dir=$(pwd)/dotfiles
 fi
 
-for script in `ls $this_dir`; do
-	[ "$script" == "$this_script" ] && continue
-	test -e $HOME/.$script && backup $HOME/.$script
-	cp -v $this_dir/$script $HOME/.$script
-done
+function debug () {
+	echo "bash_source: $BASH_SOURCE"
+	echo "calling script (\$0): $0"
+	echo "realpath $(realpath $BASH_SOURCE)"
+	this_script=${BASH_SOURCE/*\//}
+	this_script=${this_script/\//}
+	echo "this script: $this_script"
+}
+
+function preflight (){
+	let rtn=0
+	for script in `ls $this_dir`; do
+		[ "$script" == "$this_script" ] && continue
+		diff "$script" "$HOME/.$script" > /dev/null 2>&1
+		[ "$?" -gt 0 ] && log 2 "$script differs from $HOME/.$script" && rtn=$((rtn + 1))
+	done
+	return "$rtn"
+}
+
+function do_install () {
+	
+	for script in `ls $this_dir`; do
+		[ "$script" == "$this_script" ] && continue
+		test -e $HOME/.$script && backup $HOME/.$script
+		cp -v $this_dir/$script $HOME/.$script
+	done
+}
+
+
+case "$1" in
+	diff) preflight; return "$?";;
+	install) do_install;;
+	*) printf "Didn't understand arg '%s'!\nExiting!!!\n" "$1";;
+esac
+
