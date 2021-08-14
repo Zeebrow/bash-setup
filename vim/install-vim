@@ -28,6 +28,7 @@ else
 	this_dir=$(pwd)/vim
 fi
 
+echo installing vim config...
 backup ~/.vimrc
 cp -v $this_dir/vimrc $HOME/.vimrc
 
