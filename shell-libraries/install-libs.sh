@@ -26,7 +26,7 @@ else
 	this_dir=$(pwd)/shell-libraries
 fi
 
-echo installing scripts...
+echo installing libs...
 test -d $LIBS_DIR ||  mkdir -vp $LIBS_DIR
 for lib in `ls $this_dir`; do
 	[ "$lib" == "$this_script" ] && continue

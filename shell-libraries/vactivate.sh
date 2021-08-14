@@ -1,6 +1,6 @@
 function vactivate(){
 test -n "$VIRTUAL_ENV" && printf "virtualenv $VIRTUAL_ENV already active. Nothin' doin'.\n" && exit 1
-# @configurable
+
 venvs_home=$HOME/.venvs/
 venvs=(`ls -1 $venvs_home`)
 _dirpath=(${PWD//// })
