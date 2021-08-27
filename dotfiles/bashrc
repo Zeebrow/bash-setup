@@ -37,6 +37,10 @@ for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
   source "$HOME/.local/bin/scripts/libs/$lib"
 done
 
+### rootless docker
+export PATH=/usr/bin:$PATH
+export DOCKER_HOST=unix:///run/user/1000/docker.sock
+
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then
