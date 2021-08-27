@@ -63,6 +63,13 @@ function do_installs() {
 	install_vimfiles
 }
 
-do_diffs
-do_installs
+function usage () {
+	echo "${0##*/} [all|diff|help]"
+}
+
+case "$1" in 
+	all) do_installs ;;
+	diff) do_diffs ;;
+	*) usage ;;
+esac
 exit 0
