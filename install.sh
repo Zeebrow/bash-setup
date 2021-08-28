@@ -53,8 +53,6 @@ function do_diffs () {
 	install_dotfiles diff
 	rtns=$((rtns + "$?"))
 	# addl. diffs here
-	[ "$rtns" -gt 0 ] && printf "Differences in files found, continue? (y/N): "; read continue
-	[ "$continue" != "y" ] && echo pce && exit 1
 }
 
 function do_installs() {
