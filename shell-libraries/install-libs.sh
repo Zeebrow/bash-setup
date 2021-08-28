@@ -4,14 +4,15 @@
 LIBS_DIR=$HOME/.local/bin/scripts/libs
 
 function debug () {
-echo "bash_source: $BASH_SOURCE"
-echo "calling script (\$0): $0"
-echo "realpath $(realpath $BASH_SOURCE)"
-this_script=${BASH_SOURCE/*\//}
-this_script=${this_script/\//}
-echo "this script: $this_script"
+	echo "bash_source: $BASH_SOURCE"
+	echo "calling script (\$0): $0"
+	echo "realpath $(realpath $BASH_SOURCE)"
+	this_script=${BASH_SOURCE/*\//}
+	this_script=${this_script/\//}
+	echo "this script: $this_script"
 }
 
+# can we not
 this_script=${BASH_SOURCE/*\//}
 this_script=${this_script/\//}
 

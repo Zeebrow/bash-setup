@@ -2,7 +2,16 @@
 #
 # Add line below to crontab
 # @reboot /home/zeebrow/.local/bin/scripts/on-boot
-/usr/bin/test -d /home/zeebrow/sandbox || exit 0 
-/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type f | xargs /usr/bin/rm -f
-/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type d | xargs /usr/bin/rmdir
-/usr/bin/rm -rf /home/zeebrow/sandbox/*
+THIS_SCRIPT=
+
+function rake_sand () {
+	/usr/bin/test -d /home/zeebrow/sandbox || exit 0 
+	/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type f | xargs /usr/bin/rm -f
+	/usr/bin/find /home/zeebrow/sandbox/ -name ".?*" -type d | xargs /usr/bin/rmdir
+	/usr/bin/rm -rf /home/zeebrow/sandbox/*
+}
+
+
+function cronify () {
+	crontab -l 
+}
