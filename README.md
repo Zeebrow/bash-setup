@@ -17,3 +17,9 @@ will help me look back on anything fishy.
 * excludes non-ascii files from completion.
 * there may be a way to add colored-completion output
 
+
+# want
+
+See `wish`, also.
+
+* package manager install, for portability and release-based maintenance
