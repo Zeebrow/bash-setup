@@ -1,5 +1,5 @@
 function vactivate(){
-test -n "$VIRTUAL_ENV" && printf "virtualenv $VIRTUAL_ENV already active. Nothin' doin'.\n" && exit 1
+test -n "$VIRTUAL_ENV" && printf "virtualenv $VIRTUAL_ENV already active. Nothin' doin'.\n" && return 1
 
 venvs_home=$HOME/.venvs/
 venvs=(`ls -1 $venvs_home`)
