@@ -41,6 +41,31 @@ done
 export PATH=/usr/bin:$PATH
 export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
+
+# ---------------------------------XDG-------------------------------
+# All default unless otherwise noted
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+XDG_DATA_HOME="$HOME/.local/share"
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_STATE_HOME="$HOME/.local/state"
+
+# for XDG_*_DIRS, the first directory takes presedence, which is the opposite of PATH
+XDG_DATA_DIRS=/usr/local/share/:/usr/share/
+XDG_CONFIG_DIRS=/etc/xdg
+XDG_CACHE_HOME="$HOME/.cache"
+# tricky one. From the docs:
+# "Files in this directory MAY be subjected to periodic clean-up. 
+# To ensure that your files are not removed, they should have their access time timestamp modified
+# at least once every 6 hours of monotonic time or the 'sticky' bit should be set on the file."
+# XDG_RUNTIME_DIR=/run/user/1000
+
+
+
+
+
+
+
+
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then

@@ -1,9 +1,23 @@
-# bash0setup
+# bash-setup
 
 config bomb for bash
 
-Things here could use some 'splainin'
+```
+git clone ssh://git@github.com/Zeebrow/bash-setup
+cd $_
+./install.sh all
+```
 
+## shell-libraries
+
+Convenience functions for use in scripts.
+
+Needs a name change.
+
+```
+#!/bin/bash
+scour $SHLIBS
+```
 
 ## Completions
 

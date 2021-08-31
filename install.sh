@@ -1,17 +1,17 @@
 #!/bin/bash
 
 function debug () {
-	echo $0
-	echo $BASH_SOURCE
-	echo $(basename $0)
+	echo "$0"
+	echo "$BASH_SOURCE"
+	basename "$0"
 	pwd
-	realpath $0
-	realpath $BASH_SOURCE
+	realpath "$0"
+	realpath "$BASH_SOURCE"
 	echo "-------------"
 }
 
-_bn="`pwd`/$(basename $0)"
-_rp="$(realpath $0)"
+_bn=$(pwd)/$(basename "$0")
+_rp=$(realpath "$0")
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
 function preflight() {
@@ -39,17 +39,17 @@ function install_dotfiles () {
 }
 
 function install_vimfiles () {
-	mkdir -vp $HOME/.vim
+	mkdir -vp "$HOME/.vim"
 	source ./vim/install-vim
 }
 
 function install_ssh () {
-	mkdir -vp $HOME/.ssh
+	mkdir -vp "$HOME/.ssh"
 	source ./ssh/install-ssh
 }
 
 function do_diffs () {
-	let rtns=0
+	(( rtns=0 ))
 	install_dotfiles diff
 	rtns=$((rtns + "$?"))
 	# addl. diffs here
