@@ -43,14 +43,21 @@ autocmd BufReadPost *
 
 " github.com/junegunn/vim-plug
 
+" pathogen plugins
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+
+" vim plug plugins
 if filereadable(expand('~/.vim/autoload/plug.vim'))
 
   call plug#begin('~/.vim/plugged')
 "    Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
-    Plug 'sheerun/vim-polyglot'
-    Plug 'vim-pandoc/vim-pandoc'
-    Plug 'rwxrob/vim-pandoc-syntax-simple'
-    Plug 'pearofducks/ansible-vim'
+"    Plug 'jedi-vim'
+"    Plug 'sheerun/vim-polyglot'
+"    Plug 'vim-pandoc/vim-pandoc'
+"    Plug 'rwxrob/vim-pandoc-syntax-simple'
+"    Plug 'pearofducks/ansible-vim'
   call plug#end()
 
   let g:ansible_unindent_after_newline = 1
