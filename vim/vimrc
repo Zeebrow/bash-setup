@@ -15,6 +15,12 @@ set smartindent
 colorscheme industry
 "set textwidth=72
 
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+
 "set statusline+=&filetype
 
 " Fancy maps
@@ -39,19 +45,32 @@ colorscheme industry
 
 if filereadable(expand('~/.vim/autoload/plug.vim'))
 
-call plug#begin('~/.vim/plugged')
-     Plug 'sheerun/vim-polyglot'
-     Plug 'vim-pandoc/vim-pandoc'
-     Plug 'rwxrob/vim-pandoc-syntax-simple'
-     Plug 'pearofducks/ansible-vim'
-call plug#end()
-
+  call plug#begin('~/.vim/plugged')
+    Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+    Plug 'sheerun/vim-polyglot'
+    Plug 'vim-pandoc/vim-pandoc'
+    Plug 'rwxrob/vim-pandoc-syntax-simple'
+    Plug 'pearofducks/ansible-vim'
+  call plug#end()
+  
 "else
  
 
   au BufRead,BufNewFile **/dyngrp_* set filetype=yaml.ansible
   let g:ansible_unindent_after_newline = 1
-
+  let g:polygot_disabled = ['python']
+" python-mode plugin
+  let g:pymode = 1
+  let g:pymode_warnings = 1
+  " maintaining virtualenv on our own
+  let g:pymode_virtualenv = 0
+  let g:pymode_rope = 1
+  let g:pymode_rope_completion = 1
+  let g:pymode_rope_completion_bind = '<C-Space>'
+  " code completion
+  " this is easy mode - it will slow down vim if it has to traverse 
+  " parent directories to find .ropeproject
+  let g:pymode_rope_lookup_project = 1
 endif
 
 
