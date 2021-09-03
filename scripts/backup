@@ -23,7 +23,7 @@ function clean () {
 function create_backup () {
 	_is_bkup='.bkup.[0-9]*'
 	[[ "$1" =~ $_is_bkup ]] && printf "$1 is a backup file.\n" && return 1
-	#echo $1
+	printf "Backup: "
 	cp -v "$1" "$1$SUFFIX" 
 	return 0
 }
