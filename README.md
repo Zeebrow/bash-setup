@@ -19,6 +19,10 @@ Needs a name change.
 scour $SHLIBS
 ```
 
+## vim 
+
+vim config, including plugins
+
 ## Completions
 
 Completions can be just as complicated as the functions they work for.
