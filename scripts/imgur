@@ -1,0 +1,25 @@
+#!/bin/bash
+CLIENT_ID=2b79bad218110e0
+#CLIENT_ID=$(cat "$HOME/.imgur-api" | grep client_id | cut -d'=' -f2)
+SCREENSHOT=$(mktemp --suff .png)
+_resp=$(mktemp)
+
+function shake_n_bake () {
+  gnome-screenshot -a -f "$SCREENSHOT"
+  result=($(curl -sSLX POST "https://api.imgur.com/3/image" \
+    -H "Authorization: Client-ID $CLIENT_ID" \
+    --form "image=@$SCREENSHOT" \
+    -o "$_resp" \
+    -w "%{http_code} %{size_upload} %{speed_upload}"))
+  
+}
+
+function fixup () {
+  echo ${result[*]}
+  cat "$_resp" | jq '.data.link' 
+  rm "$SCREENSHOT"
+  rm "$_resp"
+}
+
+shake_n_bake
+fixup
