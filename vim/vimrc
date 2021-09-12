@@ -4,7 +4,7 @@ set ruler
 " set mouse=a
 set tabstop=2
 set autoindent
-
+set scrolloff=15
 " I think these are unique to vim, not vi
 set shiftwidth=2
 set softtabstop=2
