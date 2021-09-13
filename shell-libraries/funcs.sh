@@ -1,6 +1,6 @@
 # prupose is to print a function, as it is dispayed with `declare -f`
 get_func () {
-  [ -z "$1" ] && echo no && return 1
+  [ "$#" -ne 1 ] && echo no. && return 
   f=$(mktemp)
   declare -f > "$f"
   let begl=$(grep -n "^$1 \(\)" "$f" | cut -d: -f1)
