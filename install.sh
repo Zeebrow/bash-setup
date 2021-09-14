@@ -38,11 +38,6 @@ function install_dotfiles () {
 	source ./dotfiles/install-dotfiles
 }
 
-function install_vimfiles () {
-	mkdir -vp "$HOME/.vim"
-	source ./vim/install-vim
-}
-
 function install_ssh () {
 	mkdir -vp "$HOME/.ssh"
 	source ./ssh/install-ssh

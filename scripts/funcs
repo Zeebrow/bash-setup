@@ -1,0 +1,43 @@
+# prupose is to print a function, as it is dispayed with `declare -f`
+funcs () {
+  [ "$#" -ne 1 ]
+  f="$1"; shift
+  local begl endl
+  #declare -A funcs
+  declare -a funcs
+  declare -A blocks
+  declare -A begls
+  declare -A endls
+
+  #local regex='^\(function[ ]\+\)\?[^ ]*[ ]\+()[ ]\+{\|^\(function[ ]\+\)\?[^ ]*[ ]\+{'
+  local regex='^function[ ][^ ]*[ ](\?)\?[ ]\+{'
+
+  IFS=$'\n'
+  for line in $(grep -n "$regex" "$f"); do
+    begl=$(echo "$line" | cut -d: -f 1)
+    fname=$(echo "$line" | cut -d' ' -f2)
+    endl=$(tail -n +"$begl" "$f" | grep -nm 1 -x "\}" | cut -d: -f1 )
+#    echo "--------------------------"
+#    echo "---$line"
+#    echo "---$fname"
+#    echo "---$begl"
+#    echo "---$endl"
+    begls["$fname"]="$begl"
+    funcs+=("$fname")
+    endls["$fname"]="$endl"
+  done
+
+#  echo "${!funcs[@]} : ${funcs[@]}"
+#  echo "${!blocks[@]} : ${blocks[@]}"
+#  echo "${!begls[@]} : ${begls[@]}"
+#  echo "${!endls[@]} : ${endls[@]}"
+  if [ "$#" -eq 0 ]; then
+    for i in "${funcs[@]}"; do
+      tail -n +"${begls[$i]}" "$f" | head -"${endls[$i]}"
+    done
+  else
+    [[ ! "${!begls[@]}" =~ "$1" ]] && echo "$1 not found" && return 1
+    
+  fi
+}
+funcs "$@"
