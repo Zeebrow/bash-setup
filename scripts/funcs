@@ -1,9 +1,10 @@
+#!/bin/bash
+#
 # prupose is to print a function, as it is dispayed with `declare -f`
 funcs () {
   [ "$#" -ne 1 ]
   f="$1"; shift
   local begl endl
-  #declare -A funcs
   declare -a funcs
   declare -A blocks
   declare -A begls
@@ -17,11 +18,6 @@ funcs () {
     begl=$(echo "$line" | cut -d: -f 1)
     fname=$(echo "$line" | cut -d' ' -f2)
     endl=$(tail -n +"$begl" "$f" | grep -nm 1 -x "\}" | cut -d: -f1 )
-#    echo "--------------------------"
-#    echo "---$line"
-#    echo "---$fname"
-#    echo "---$begl"
-#    echo "---$endl"
     begls["$fname"]="$begl"
     funcs+=("$fname")
     endls["$fname"]="$endl"
@@ -40,4 +36,19 @@ funcs () {
     
   fi
 }
-funcs "$@"
+
+function shfuncs () {
+  [ "$#" -ne 1 ] && echo no. && return 
+  f=$(mktemp)
+  declare -f > "$f"
+  let begl=$(grep -n "^$1 \(\)" "$f" | cut -d: -f1)
+  let linc=$(tail -n +"$begl" "$f" | grep -nm 1 -x "\}" | cut -d: -f1 )
+  tail -n +"$begl" "$f" | head -"$linc"
+  rm "$f"
+}
+
+case "$1" in 
+  -e) shift; shfuncs "$@";;
+  *) funcs "$@" ;;
+esac
+
