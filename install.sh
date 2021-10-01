@@ -53,7 +53,6 @@ function do_diffs () {
 function do_installs() {
 	install_dotfiles install
 	install_scripts
-	install_vimfiles
 }
 
 function usage () {
