@@ -184,7 +184,9 @@ shopt -s histappend
 
 PROMPT_LONG=50
 PROMPT_MAX=95
-
+__ps0() {
+  :
+}
 __ps1() {
   local P='$'
 
@@ -285,15 +287,15 @@ test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
 
 # ------------- source external dependencies / completion ------------
 
-owncomp=(pdf md yt gl kn auth pomo config sshkey ws ./build build ./setup)
-for i in ${owncomp[@]}; do complete -C $i $i; done
+#owncomp=(pdf md yt gl kn auth pomo config sshkey ws ./build build ./setup)
+#for i in ${owncomp[@]}; do complete -C $i $i; done
 
-type gh &>/dev/null && . <(gh completion -s bash)
-type pandoc &>/dev/null && . <(pandoc --bash-completion)
-type kubectl &>/dev/null && . <(kubectl completion bash)
-type k &>/dev/null && complete -o default -F __start_kubectl k
-type kind &>/dev/null && . <(kind completion bash)
-type yq &>/dev/null && . <(yq shell-completion bash)
+#type gh &>/dev/null && . <(gh completion -s bash)
+#type pandoc &>/dev/null && . <(pandoc --bash-completion)
+#type kubectl &>/dev/null && . <(kubectl completion bash)
+#type k &>/dev/null && complete -o default -F __start_kubectl k
+#type kind &>/dev/null && . <(kind completion bash)
+#type yq &>/dev/null && . <(yq shell-completion bash)
 
 # ------------------------------ aliases -----------------------------
 
@@ -374,3 +376,9 @@ c() { printf "\e[H\e[2J"; } && export -f c
 #test -r ~/.bash_personal && source ~/.bash_personal
 #test -r ~/.bash_private && source ~/.bash_private
 #test -r ~/.bash_work && source ~/.bash_work
+
+
+# garbage
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
