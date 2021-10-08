@@ -1,0 +1,52 @@
+#!/bin/bash
+function usage () {
+  echo "${0#*/} NAME | [ls|set]" 
+}
+
+[ -z "$1" ] && usage && exit 1
+test "$HOSTNAME" = "zbrow.io" || (echo WHERE YOU AT LOL && exit 1)
+
+EXTERN_URL=https://zbrow.io/twitch-project/current.html
+
+TWITCH_HTML_HOME=/usr/share/nginx/twitch-project
+declare -A PRJS=()
+
+function usage() {
+  echo "${0#./} "
+}
+
+function _init () {
+  local prj_name
+  local htmlfile
+  for f in `ls -1 "$TWITCH_HTML_HOME"`; do
+    echo "$f" | grep -q 'project-'
+    [ "$?" -ne 0 ] && continue
+    
+    htmlfile=${f##*/}
+    prj_name=`echo "${f##*/}" | sed -e 's/^project-//; s/.html$//'`
+    PRJS["$prj_name"]="$htmlfile"
+  done
+}
+
+function get_prjs () {
+  echo "${!PRJS[@]}"
+}
+
+function set_prj () {
+  [ "$#" -ne 1 ] && echo Too many arguments provided. && usage && return 2
+  if [[ "${!PRJS[@]}" =~ "$1"  ]]; then
+    ln -svf "$TWITCH_HTML_HOME"/project-"$1".html "$TWITCH_HTML_HOME"/current.html
+    return 0
+  fi
+  echo "Project '$1' not in projects: ${!PRJS[@]}"
+  return 1
+}
+
+_init
+case "$1" in
+  ls) get_prjs; exit "$?";;
+  -*) usage; exit 1;;
+  *) set_prj "$@"; exit "$?";;
+esac
+
+exit 1
