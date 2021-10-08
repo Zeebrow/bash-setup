@@ -6,6 +6,13 @@
 echo "installing dotfiles for $USER..."
 
 # want backup
+unset -f backup
+backup() {
+  [ "$#" -lt 1 ] && return
+  local _SFX=.bkup.$(date +%s)
+  for i in "$@"; do cp -v "$1" "$1$_SFX"; done
+}
+
 test -d $HOME/.local/bin/scripts && export PATH=$PATH:$HOME/.local/bin/scripts
 
 this_script=${BASH_SOURCE/*\//}
