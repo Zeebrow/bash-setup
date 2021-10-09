@@ -155,12 +155,9 @@ pathappend \
 
 # ------------------------------ cdpath ------------------------------
 
-#export CDPATH=.:\
-#~/repos/github.com:\
-#~/repos/github.com/$GITUSER:\
-#~/repos:\
-#/media/$USER:\
-#~
+export CDPATH=.:\
+~/repos/github.com/$GITUSER:\
+~
 
 # ------------------------ bash shell options ------------------------
 #shopt -s direxpand
