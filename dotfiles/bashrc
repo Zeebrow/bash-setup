@@ -1,21 +1,15 @@
-
+# --------------------------------------------------------------------
 case $- in
 *i*) ;; # interactive
 *) return ;; 
 esac
-# -------------------------------path---------------------------------
-# Friendly reminder that path should be set in bash_profile, 
-# which is only run once per login
-
 # ----------------------- environment variables ----------------------
-#                           (also see envx)
 
 export GITUSER="$USER"
 #export DOTFILES="$HOME/repos/github.com/$GITUSER/dot"
 #export GHREPOS="$HOME/repos/github.com/$GITUSER/"
 
 export TERM=xterm-256color
-#export HRULEWIDTH=73
 export EDITOR=vi
 export VISUAL=vi
 export EDITOR_PREFIX=vi
@@ -33,6 +27,7 @@ export CGO_ENABLED=0
 export MYREPOS="$HOME/repos/github.com/$USER"
 export SANDBOX="$HOME/sandbox"
 
+# TODO questionable
 for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
   source "$HOME/.local/bin/scripts/libs/$lib"
 done
@@ -60,27 +55,12 @@ XDG_CACHE_HOME="$HOME/.cache"
 # XDG_RUNTIME_DIR=/run/user/1000
 
 
-
-
-
-
-
-
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then
   export LESSOPEN="| /usr/bin/lesspipe %s";
   export LESSCLOSE="/usr/bin/lesspipe %s %s";
 fi
-
-#export LESS_TERMCAP_mb="[35m" # magenta
-#export LESS_TERMCAP_md="[33m" # yellow
-#export LESS_TERMCAP_me="" # "0m"
-#export LESS_TERMCAP_se="" # "0m"
-#export LESS_TERMCAP_so="[34m" # blue
-#export LESS_TERMCAP_ue="" # "0m"
-#export LESS_TERMCAP_us="[4m"  # underline
-#export LESS_TERMCAP_us="$(tput bold; tput setaf 4;)"  # underline
 
 # whaever, use tput because it doesn't bleed colors. Neglible speed hit.
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
@@ -131,10 +111,7 @@ pathprepend() {
   done
 }
 
-# override as needed in .bashrc_{personal,private,work}
-# several utilities depend on SCRIPTS being in a github repo
 export SCRIPTS=~/.local/bin/scripts
-mkdir -p "$SCRIPTS" &>/dev/null
 
 # remember last arg will be first in path
 pathprepend \
@@ -172,13 +149,13 @@ shopt -s extglob
 #shopt -s nullglob # bug kills completion for some
 #set -o noclobber
 set -o emacs
+shopt -s histappend
 # ------------------------------ history -----------------------------
 
 export HISTCONTROL=ignoreboth
 export HISTSIZE=5000
 export HISTFILESIZE=10000
 
-shopt -s histappend
 
 # --------------------------- smart prompt ---------------------------
 
@@ -213,18 +190,6 @@ __ps1() {
     local b='\[\033[36m\]'
     local x='\[\033[0m\]'
   fi
-
-#  if test -n "${ZSH_VERSION}"; then
-#    local r='%F{red}'
-#    local g='%F{black}'
-#    local h='%F{blue}'
-#    local u='%F{yellow}'
-#    local p='%F{yellow}'
-#    local w='%F{magenta}'
-#    local b='%F{cyan}'
-#    local x='%f'
-#  fi
-
 
   # python virtualenv
   test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
@@ -285,41 +250,16 @@ PROMPT_COMMAND="__ps1"
 
 test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
 
-# ------------- source external dependencies / completion ------------
-
-#owncomp=(pdf md yt gl kn auth pomo config sshkey ws ./build build ./setup)
-#for i in ${owncomp[@]}; do complete -C $i $i; done
-
-#type gh &>/dev/null && . <(gh completion -s bash)
-#type pandoc &>/dev/null && . <(pandoc --bash-completion)
-#type kubectl &>/dev/null && . <(kubectl completion bash)
-#type k &>/dev/null && complete -o default -F __start_kubectl k
-#type kind &>/dev/null && . <(kind completion bash)
-#type yq &>/dev/null && . <(yq shell-completion bash)
-
 # ------------------------------ aliases -----------------------------
 
 unalias -a
 
-if [ $(uname) == Darwin ]; then
-    alias ls='ls -Gh'
-else   
-    alias ls='ls -h --color=auto'
-fi
-
+alias ls='ls -h --color=auto'
 alias ll='ls -l'
 alias grep='grep -i --colour=auto'
 alias egrep='egrep -i --colour=auto'
 alias fgrep='fgrep -i --colour=auto'
 alias curl='curl -L'
-#alias '?'=duck
-#alias '??'=google
-#alias '???'=bing
-#alias x="exit"
-#alias sl="sl -e"
-#alias mkdirisosec='d=$(isosec);mkdir $d; cd $d'
-#alias main='cd $(work main)'
-#alias dot='cd $DOTFILES'
 alias scripts='cd $SCRIPTS'
 alias free='free -h'
 alias df='df -h'
@@ -333,52 +273,18 @@ which vim &>/dev/null && alias vi=vim
 
 alias repos='cd $MYREPOS'
 alias sandbox='cd $SANDBOX'
-alias k='kubectl'
+
 # ----------------------------- functions ----------------------------
+# see $SCRIPTS/lib
 
-clear() { printf "\e[H\e[2J"; } && export -f clear
-c() { printf "\e[H\e[2J"; } && export -f c
-
-#envx() {
-#  local envfile="$1"
-#  if test ! -e "$envfile" ; then
-#    if test ! -e ~/.env ; then
-#      echo "file not found: $envfile"
-#      return
-#    fi
-#    envfile=~/.env
-#  fi
-#  while IFS= read -r line; do
-#    name=${line%%=*}
-#    value=${line#*=}
-#    if [[ -z "${name}" || $name =~ ^# ]]; then
-#      continue
-#    fi
-#    export "$name"="$value"
-#  done <"${envfile}"
-#} && export -f envx
-#
-#test -e ~/.env && envx ~/.env 
-#
-#newcmd() { 
-#  name="$1"
-#  test -z "$name" && echo "usage: newcmd <name>" && return 1
-#  test -z "$GHREPOS" && echo "GHREPOS not set" && return 1
-#  test ! -d "$GHREPOS" && echo "Not found: $GHREPOS" && return 1
-#  test -e "cmdbox-$name" && echo "exists: cmdbox-$name" && return 1
-#  cd "$GHREPOS"
-#  gh repo create -p rwxrob/cmdbox-_foo "cmdbox-$name"
-#  cd "cmdbox-$name"
-#} && export -f newcmd
-
-# -------------------- personalized configuration --------------------
+# -------------------- garbage --------------------
 
 #test -r ~/.bash_personal && source ~/.bash_personal
 #test -r ~/.bash_private && source ~/.bash_private
 #test -r ~/.bash_work && source ~/.bash_work
 
 
-# garbage
+# ------------------------------garbage-------------------------------
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
