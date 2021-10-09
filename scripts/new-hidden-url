@@ -1,0 +1,20 @@
+#!/bin/bash
+echo not ready && exit 1
+[ $(id -u) -ne 0 ] && echo must be run as root. && exit 1
+
+nginx_conf=/etc/nginx/nginx.conf
+key=linkset-gitea
+
+grep -q "$key" "$nginx_conf"
+[ "$?" -ne 0 ] && echo "$key" not found - you sure you got the right one? && exit 1
+
+old_uuid=$(cat "$nginx_conf" | grep "$key" | cut -d' ' -f 2 | tr -d '/')
+echo "$old_uuid"
+
+new_uuid=$(uuidgen)
+
+sed -i "s/$old_uuid/$new_uuid"
+
+#/etc/nginx/nginx.conf linkset-gitea
+#location /2630baed-9f60-4698-86b0-2a6e5d82d278/ { #linkset-gitea
+#ROOT_URL         = http://zbrow.io/2630baed-9f60-4698-86b0-2a6e5d82d278/
