@@ -1,0 +1,23 @@
+#!/bin/bash
+# Maintain TODO list
+# - add to html
+# - add to .md and publish
+# I think python-worthy
+
+function insert_into_html () {
+  echo python would be best
+}
+
+fucntion get_list () {
+  echo TODOS:
+  echo LUL
+}
+
+function add_todo () {
+  # below is why I would prefer python: nested, complex bash funcs
+  # IDK an easy way to insert_into_(*) from bash. Too much commitment required,
+  #   high maintenance cost, doesn't read well. 
+  insert_into_html 
+}
+
+
