@@ -27,16 +27,6 @@ export CGO_ENABLED=0
 export MYREPOS="$HOME/repos/github.com/$USER"
 export SANDBOX="$HOME/sandbox"
 
-# TODO questionable
-for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
-  source "$HOME/.local/bin/scripts/libs/$lib"
-done
-
-### rootless docker
-export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix:///run/user/1000/docker.sock
-
-
 # ---------------------------------XDG-------------------------------
 # All default unless otherwise noted
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
@@ -260,7 +250,6 @@ alias curl='curl -L'
 alias scripts='cd $SCRIPTS'
 alias free='free -h'
 alias df='df -h'
-alias top=htop
 alias chmox='chmod +x'
 #alias sshh='sshpass -f $HOME/.sshpass ssh '
 alias temp='cd $(mktemp -d)'
@@ -268,6 +257,3 @@ alias view='vi -R' # which is usually linked to vim
 
 which vim &>/dev/null && alias vi=vim
 
-alias repos='cd $MYREPOS'
-alias sandbox='cd $SANDBOX'
-alias k='kubectl'
