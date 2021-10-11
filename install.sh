@@ -21,6 +21,7 @@ function preflight() {
 function prep_home () {
 	mkdir -vp "$HOME/.local/bin/scripts"
 	mkdir -vp "$HOME/.local/bin/scripts/lib"
+	mkdir -vp "$HOME/.local/bin/scripts/completions"
 	mkdir -vp "$HOME/.local/etc"
 	mkdir -vp "$HOME/.local/var/run"
 	mkdir -vp "$HOME/.local/var/log"
@@ -32,6 +33,10 @@ function prep_home () {
 function install_scripts () {
 	source ./shell-libraries/install-libs.sh
 	source ./scripts/install-scripts
+}
+
+function install_completions () {
+  cp -v completions/*.bash "$HOME/.local/bin/scripts/completions"
 }
 
 function install_dotfiles () {
@@ -51,8 +56,10 @@ function do_diffs () {
 }
 
 function do_installs() {
+  prep_home
 	install_dotfiles install
 	install_scripts
+  install_completions
 }
 
 function usage () {
