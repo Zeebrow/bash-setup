@@ -19,5 +19,5 @@ _complete_emo () {
 	#_deboog
 }
 
-#complete -C _complete_vic vic
 complete -X "$nocomplete" -F _complete_emo emo
+alias emos='emo -l'
