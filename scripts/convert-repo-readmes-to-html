@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+mdfs=(`find /home/zeebrow/repos/github.com/zeebrow -maxdepth 2 -name README.md -print`)
+echo "${mdfs[@]}"
+for f in "${mdfs[@]}"; do
+  html_name=$(echo "$f" | awk 'BEGIN{FS="/"}{print $(NF-1),"-",$(NF)}' | tr -d ' ' | sed 's/\.md/.html/g')
+  pandoc -f markdown -t html -o "$html_name" "$f"
+done
+
