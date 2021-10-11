@@ -1,0 +1,91 @@
+set nocompatible
+set number
+set ruler
+" set mouse=a
+set tabstop=2
+set autoindent
+set scrolloff=15
+" I think these are unique to vim, not vi
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set smarttab
+set smartindent
+"syntax enable
+colorscheme industry
+"set textwidth=72
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+
+"set statusline+=&filetype
+
+" Fancy maps
+
+
+
+
+
+" disable arrow keys (vi muscle memory)
+" because you're bold and daring
+" noremap <up> :echoerr "Umm, use k instead"<CR>
+" noremap <down> :echoerr "Umm, use j instead"<CR>
+" noremap <left> :echoerr "Umm, use h instead"<CR>
+" noremap <right> :echoerr "Umm, use l instead"<CR>
+" inoremap <up> <NOP>
+" inoremap <down> <NOP
+" inoremap <left> <NOP>
+" inoremap <right> <NOP>
+"
+
+" github.com/junegunn/vim-plug
+
+"syntax on
+"filetype plugin indent on
+
+" vim plug plugins
+if filereadable(expand('~/.vim/autoload/plug.vim'))
+
+  call plug#begin('~/.vim/plugged')
+"    Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+    Plug 'davidhalter/jedi-vim'
+"    Plug 'sheerun/vim-polyglot'
+"    Plug 'vim-pandoc/vim-pandoc'
+"    Plug 'rwxrob/vim-pandoc-syntax-simple'
+"    Plug 'pearofducks/ansible-vim'
+  call plug#end()
+
+  " jedi-vim 
+  " C-space to begin completion, C-cr to insert carriage return after
+  " completion
+  autocmd FileType python setlocal completeopt-=preview
+  let g:jedi#popup_on_dot = 0
+  let g:jedi#show_call_signatures = 0
+
+
+
+
+
+  let g:ansible_unindent_after_newline = 1
+  let g:polygot_disabled = ['python']
+
+
+  " python-mode plugin
+  "
+  let g:pymode = 1
+  let g:pymode_warnings = 1
+  " maintaining virtualenv on our own
+  let g:pymode_virtualenv = 0
+  let g:pymode_rope = 1
+  let g:pymode_rope_completion = 1
+  let g:pymode_rope_completion_bind = '<C-Space>'
+  " code completion
+  " this is easy mode - it will slow down vim if it has to traverse 
+  " parent directories to find .ropeproject
+  let g:pymode_rope_lookup_project = 1
+endif
+
+
