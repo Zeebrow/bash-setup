@@ -12,7 +12,11 @@ set expandtab
 set smarttab
 set smartindent
 "syntax enable
-colorscheme industry
+"colorscheme industry
+colorscheme darkblue
+"colorscheme koehler
+"colorscheme delek
+"colorscheme
 "set textwidth=72
 
 " Return to last edit position when opening files (You want this!)
@@ -52,11 +56,22 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
   call plug#begin('~/.vim/plugged')
 "    Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
     Plug 'davidhalter/jedi-vim'
+
+    " https://github.com/fatih/vim-go
+    " run :GoInstallBinaries
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "    Plug 'sheerun/vim-polyglot'
 "    Plug 'vim-pandoc/vim-pandoc'
 "    Plug 'rwxrob/vim-pandoc-syntax-simple'
 "    Plug 'pearofducks/ansible-vim'
   call plug#end()
+
+  " vim-go
+  let g:go_highlight_types = 1
+  let g:go_highlight_fields = 1
+  let g:go_highlight_functions = 1
+  let g:go_highlight_function_calls = 1
+  let g:go_highlight_build_constraints = 1
 
   " jedi-vim 
   " C-space to begin completion, C-cr to insert carriage return after
