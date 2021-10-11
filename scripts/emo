@@ -6,11 +6,17 @@ declare -A unis
 declare -A functs
 
 function usage () {
-  [ -f "$DB" ] && emoji NAME | [ ls | add [-p] NAME | del NAME | config ]
+  [ -f "$DB" ] && echo 'emoji NAME | [ ls | add [-p] NAME | del NAME | config ]'
 }
 
 function load () {
-  
+  if [ ! -f "$DB" ]; then 
+    echo "No DB detected at $DB, one will be created now..." 
+    mkdir -p "${DB%%*/}"
+    touch "$DB"
+    echo "smile 😀" >> "$DB"
+    echo "...with a new emoji for you! 😀"
+  fi
   IFS=$'\n'; for e in `cat "$DB"`; do
     emojis[$(echo "$e" | cut -d' ' -f1)]=$(echo "$e" | cut -d' ' -f2)
     unis[$(echo "$e" | cut -d' ' -f1)]=$(echo "$e" | cut -d' ' -f3)
@@ -20,7 +26,6 @@ function load () {
 
 
 function add () {
-  set -x
   [ "$#" -lt 2 ] && echo "emo -a ALIAS UNICODE" && return 1
   local new_emoji="$1"
   local new_unicode="$2"
@@ -70,6 +75,7 @@ case "$1" in
   --dump|-d) dump; exit 0;;
   --list|-l) list; exit 0;;
   --func|-f) shift; get_func "$1";;
+  --help|-h) usage; exit 0;;
   *) emo "$1";;
 esac
 
