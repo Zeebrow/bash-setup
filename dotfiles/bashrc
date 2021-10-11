@@ -270,7 +270,7 @@ which vim &>/dev/null && alias vi=vim
 
 alias repos='cd $MYREPOS'
 alias sandbox='cd $SANDBOX'
-
+alias gs='git status'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
 
