@@ -37,6 +37,35 @@ for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
   source "$HOME/.local/bin/scripts/libs/$lib"
 done
 
+### rootless docker
+export PATH=/usr/bin:$PATH
+export DOCKER_HOST=unix:///run/user/1000/docker.sock
+
+
+# ---------------------------------XDG-------------------------------
+# All default unless otherwise noted
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+XDG_DATA_HOME="$HOME/.local/share"
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_STATE_HOME="$HOME/.local/state"
+
+# for XDG_*_DIRS, the first directory takes presedence, which is the opposite of PATH
+XDG_DATA_DIRS=/usr/local/share/:/usr/share/
+XDG_CONFIG_DIRS=/etc/xdg
+XDG_CACHE_HOME="$HOME/.cache"
+# tricky one. From the docs:
+# "Files in this directory MAY be subjected to periodic clean-up. 
+# To ensure that your files are not removed, they should have their access time timestamp modified
+# at least once every 6 hours of monotonic time or the 'sticky' bit should be set on the file."
+# XDG_RUNTIME_DIR=/run/user/1000
+
+
+
+
+
+
+
+
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then
@@ -44,6 +73,14 @@ if test -x /usr/bin/lesspipe; then
   export LESSCLOSE="/usr/bin/lesspipe %s %s";
 fi
 
+#export LESS_TERMCAP_mb="[35m" # magenta
+#export LESS_TERMCAP_md="[33m" # yellow
+#export LESS_TERMCAP_me="" # "0m"
+#export LESS_TERMCAP_se="" # "0m"
+#export LESS_TERMCAP_so="[34m" # blue
+#export LESS_TERMCAP_ue="" # "0m"
+#export LESS_TERMCAP_us="[4m"  # underline
+#export LESS_TERMCAP_us="$(tput bold; tput setaf 4;)"  # underline
 
 # whaever, use tput because it doesn't bleed colors. Neglible speed hit.
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
@@ -118,15 +155,12 @@ pathappend \
 
 # ------------------------------ cdpath ------------------------------
 
-#export CDPATH=.:\
-#~/repos/github.com:\
-#~/repos/github.com/$GITUSER:\
-#~/repos:\
-#/media/$USER:\
-#~
+export CDPATH=.:\
+~/repos/github.com/$GITUSER:\
+~
 
 # ------------------------ bash shell options ------------------------
-
+#shopt -s direxpand
 shopt -s checkwinsize
 #shopt -s expand_aliases
 shopt -s globstar
@@ -147,9 +181,11 @@ shopt -s histappend
 
 PROMPT_LONG=50
 PROMPT_MAX=95
-
+__ps0() {
+  :
+}
 __ps1() {
-  local P=\$
+  local P='$'
 
   if test "$(uname)" = "Darwin"; then
     #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
@@ -166,17 +202,25 @@ __ps1() {
     local x='\[\033[0m\]'
   else
     local r='\[\033[31m\]'
-    # '@'
-    local g='\[\033[91m\]'
-    # hostname
-    local h='\[\033[91m\]'
-    # user
+    local g='\[\033[30m\]'
+    local h='\[\033[34m\]'
     local u='\[\033[33m\]'
     local p='\[\033[33m\]'
     local w='\[\033[35m\]'
     local b='\[\033[36m\]'
     local x='\[\033[0m\]'
   fi
+
+#  if test -n "${ZSH_VERSION}"; then
+#    local r='%F{red}'
+#    local g='%F{black}'
+#    local h='%F{blue}'
+#    local u='%F{yellow}'
+#    local p='%F{yellow}'
+#    local w='%F{magenta}'
+#    local b='%F{cyan}'
+#    local x='%f'
+#  fi
 
 
   # python virtualenv
@@ -240,15 +284,15 @@ test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
 
 # ------------- source external dependencies / completion ------------
 
-owncomp=(pdf md yt gl kn auth pomo config sshkey ws ./build build ./setup)
-for i in ${owncomp[@]}; do complete -C $i $i; done
+#owncomp=(pdf md yt gl kn auth pomo config sshkey ws ./build build ./setup)
+#for i in ${owncomp[@]}; do complete -C $i $i; done
 
-type gh &>/dev/null && . <(gh completion -s bash)
-type pandoc &>/dev/null && . <(pandoc --bash-completion)
-type kubectl &>/dev/null && . <(kubectl completion bash)
-type k &>/dev/null && complete -o default -F __start_kubectl k
-type kind &>/dev/null && . <(kind completion bash)
-type yq &>/dev/null && . <(yq shell-completion bash)
+#type gh &>/dev/null && . <(gh completion -s bash)
+#type pandoc &>/dev/null && . <(pandoc --bash-completion)
+#type kubectl &>/dev/null && . <(kubectl completion bash)
+#type k &>/dev/null && complete -o default -F __start_kubectl k
+#type kind &>/dev/null && . <(kind completion bash)
+#type yq &>/dev/null && . <(yq shell-completion bash)
 
 # ------------------------------ aliases -----------------------------
 
@@ -329,3 +373,9 @@ c() { printf "\e[H\e[2J"; } && export -f c
 #test -r ~/.bash_personal && source ~/.bash_personal
 #test -r ~/.bash_private && source ~/.bash_private
 #test -r ~/.bash_work && source ~/.bash_work
+
+
+# garbage
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
