@@ -28,6 +28,7 @@ function prep_home () {
 	mkdir -vp "$HOME/.local/share/go"
 		ln -vs "$HOME/Documents/go" "$HOME/.local/share/go"
 		ln -vs "$REPOS/go" "$HOME/.local/share/go"
+  mkdir -vp "$HOME/.local/lib/perl5"
 }
 
 function install_scripts () {
