@@ -19,6 +19,7 @@ function preflight() {
 }
 
 function prep_home () {
+  # dont count on XDG_ vars being set
 	mkdir -vp "$HOME/.local/bin/scripts"
 	mkdir -vp "$HOME/.local/bin/scripts/lib"
 	mkdir -vp "$HOME/.local/bin/scripts/completions"
@@ -26,9 +27,10 @@ function prep_home () {
 	mkdir -vp "$HOME/.local/var/run"
 	mkdir -vp "$HOME/.local/var/log"
 	mkdir -vp "$HOME/.local/share/go"
-		ln -vs "$HOME/Documents/go" "$HOME/.local/share/go"
+		ln -vs "$HOME/Documents/projects/go" "$HOME/.local/share/go"
 		ln -vs "$REPOS/go" "$HOME/.local/share/go"
   mkdir -vp "$HOME/.local/lib/perl5"
+  mkdir -vp "$HOME/.config/git"
 }
 
 function install_scripts () {
