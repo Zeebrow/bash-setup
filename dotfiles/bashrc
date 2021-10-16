@@ -279,6 +279,7 @@ alias gs='git status'
 alias gp='git push'
 alias gc='git commit'
 alias gca='git commit -a'
+alias co='git checkout'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
 
