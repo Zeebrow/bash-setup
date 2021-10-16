@@ -27,7 +27,7 @@ function prep_home () {
 	mkdir -vp "$HOME/.local/var/run"
 	mkdir -vp "$HOME/.local/var/log"
 	mkdir -vp "$HOME/.local/share/go"
-		ln -vs "$HOME/Documents/projects/go" "$HOME/.local/share/go"
+		ln -vsf "$HOME/Documents/projects/go" "$HOME/.local/share/go"
 		ln -vs "$REPOS/go" "$HOME/.local/share/go"
   mkdir -vp "$HOME/.local/lib/perl5"
   mkdir -vp "$HOME/.config/git"
