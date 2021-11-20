@@ -1,0 +1,13 @@
+#!/bin/bash
+notes_home="$HOME/.local/share/notes"
+
+mkdir -p "$notes_home"
+
+print_note() {
+  fmt-md-text -f "$notes_home/$1.md"
+}
+
+case "$1" in 
+  make|new|add) new_note "$1";;
+  *) print_note "$@" ;;
+esac
