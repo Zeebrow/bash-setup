@@ -1,0 +1,22 @@
+#!/bin/bash
+notes_home="$HOME/.local/share/notes"
+
+mkdir -p "$notes_home"
+
+[ -z "$EDITOR" ] && EDITOR=`which vi`
+[ -z "$1" ] && echo "enter a note.md file to edit/create" && exit 1
+
+if [[ ! "$1" =~ '.md' ]]; then
+  note="$1".md
+else
+  note="$1"
+fi
+
+
+# completion will complete without .md extension
+#"$EDITOR" "$notes_home/$1.md" 
+
+# or not - kinda makes it clear that you're editing.
+# this is my preference
+"$EDITOR" "$notes_home/$note" 
+
