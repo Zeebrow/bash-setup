@@ -20,11 +20,14 @@ export PYTHONDONTWRITEBYTECODE=1
 
 test -d ~/.vim/spell && export VIMSPELL=(~/.vim/spell/*.add)
 
-export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
-export GOPATH=~/.local/share/go
-export GOBIN=~/.local/bin
-export GOPROXY=direct
-export CGO_ENABLED=0
+#export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
+#export GOPATH=/home/zeebrow/.local/share/go
+#export GOPATH=/home/zeebrow/go
+export GOPATH=/home/zeebrow/go
+export GOROOT=/usr/local/go
+#export GOBIN=~/.local/bin
+#export GOPROXY=direct
+#export CGO_ENABLED=0
 
 export MYREPOS="$HOME/repos/github.com/$USER"
 export SANDBOX="$HOME/sandbox"
@@ -167,7 +170,19 @@ __ps0() {
   :
 }
 __ps1() {
+  local L="$?"
+  #[ "$LAST_CMD" -ne 0 ] && L="($LAST_CMD) " 
+  if [ "$L" -eq 0 ]; then
+    L=""
+  else
+    L="($L) "
+  fi
+  
+  local Crst='\033[0m'
+  local Cred='\033[31m'
+  local CBlu='\033[34m'
   local P='$'
+  L="$Cred$L$Crst"
 
   if test "$(uname)" = "Darwin"; then
     #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
@@ -184,8 +199,11 @@ __ps1() {
     local x='\[\033[0m\]'
   else
     local r='\[\033[31m\]'
+    # separators, e.g.'@'
     local g='\[\033[30m\]'
+    # hostname \h
     local h='\[\033[34m\]'
+    # user \u
     local u='\[\033[33m\]'
     local p='\[\033[33m\]'
     local w='\[\033[35m\]'
@@ -220,6 +238,8 @@ __ps1() {
     fi
   fi
 
+
+
   local B=$(git branch --show-current 2>/dev/null)
   test "$dir" = "$B" && B='.'
   local countme="$USER@$(hostname):$dir($B)\$ "
@@ -232,7 +252,7 @@ __ps1() {
     local long="$V$g╔ $u%n$g@%m\h$g:$w$dir$B\n$g╚ $p$P$x "
     local double="$V$g╔ $u%n$g@%m\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
   else
-    local short="$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
+    local short="$L$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
     local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
     local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
   fi
