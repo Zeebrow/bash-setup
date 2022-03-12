@@ -170,49 +170,37 @@ __ps0() {
   :
 }
 __ps1() {
+  ## exit status of last command
   local L="$?"
-  #[ "$LAST_CMD" -ne 0 ] && L="($LAST_CMD) " 
   if [ "$L" -eq 0 ]; then
     L=""
   else
     L="($L) "
   fi
-  
   local Crst='\033[0m'
   local Cred='\033[31m'
   local CBlu='\033[34m'
   local P='$'
   L="$Cred$L$Crst"
+  ##
 
-  if test "$(uname)" = "Darwin"; then
-    #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
-    local r='\[\033[31m\]'
-    local g=$(tput setaf 237)
-    #local g='\[\033[52m\]'
-    local gh='\[\033[52m\]'
-    local h=$(tput setaf 24)
-    #local h='\[\033[94m\]'
-    local u='\[\033[90m\]'
-    local p='\[\033[37m\]'
-    local w='\[\033[34m\]'
-    local b='\[\033[36m\]'
-    local x='\[\033[0m\]'
-  else
-    local r='\[\033[31m\]'
-    # separators, e.g.'@'
-    local g='\[\033[30m\]'
-    # hostname \h
-    local h='\[\033[34m\]'
-    # user \u
-    local u='\[\033[33m\]'
-    local p='\[\033[33m\]'
-    local w='\[\033[35m\]'
-    local b='\[\033[36m\]'
-    local x='\[\033[0m\]'
-  fi
+  ## colors
+  local r='\[\033[31m\]'
+  # separators, e.g.'@'
+  local g='\[\033[30m\]'
+  # hostname \h
+  local h='\[\033[34m\]'
+  # user \u
+  local u='\[\033[33m\]'
+  local p='\[\033[33m\]'
+  local w='\[\033[35m\]'
+  local b='\[\033[36m\]'
+  local x='\[\033[0m\]'
+  ##
 
-  # python virtualenv
+  ## python virtualenv
   test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
+  ##
 
   if test "${EUID}" == 0; then
     P='#'
@@ -240,22 +228,19 @@ __ps1() {
 
 
 
+  ## detect when in in git controlled repo
   local B=$(git branch --show-current 2>/dev/null)
   test "$dir" = "$B" && B='.'
-  local countme="$USER@$(hostname):$dir($B)\$ "
 
   test "$B" = master -o "$B" = main && b=$r
   test -n "$B" && B="$b($b$B$b)"
+  ##
 
-  if test -n "${ZSH_VERSION}"; then
-    local short="$V$u%n$g@$h%m$g:$w$dir$B$p$P$x "
-    local long="$V$g╔ $u%n$g@%m\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$V$g╔ $u%n$g@%m\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
-  else
-    local short="$L$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
-    local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
-  fi
+  local countme="$USER@$(hostname):$dir($B)\$ "
+  ## "smart" part
+  local short="$L$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
+  local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
+  local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
 
   if test ${#countme} -gt "${PROMPT_MAX}"; then
     PS1="$double"
@@ -264,6 +249,7 @@ __ps1() {
   else
     PS1="$short"
   fi
+  ##
 }
 
 PROMPT_COMMAND="__ps1"
@@ -301,13 +287,6 @@ alias gca='git commit -a'
 alias co='git checkout'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
-
-# -------------------- garbage --------------------
-
-#test -r ~/.bash_personal && source ~/.bash_personal
-#test -r ~/.bash_private && source ~/.bash_private
-#test -r ~/.bash_work && source ~/.bash_work
-
 
 # ------------------------------garbage-------------------------------
 export NVM_DIR="$HOME/.nvm"
