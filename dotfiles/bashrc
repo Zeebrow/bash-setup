@@ -22,11 +22,10 @@ test -d ~/.vim/spell && export VIMSPELL=(~/.vim/spell/*.add)
 
 #export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
 #export GOPATH=/home/zeebrow/.local/share/go
-#export GOPATH=/home/zeebrow/go
 export GOPATH=/home/zeebrow/go
 export GOROOT=/usr/local/go
 #export GOBIN=~/.local/bin
-#export GOPROXY=direct
+export GOPROXY=direct
 #export CGO_ENABLED=0
 
 export MYREPOS="$HOME/repos/github.com/$USER"
@@ -170,93 +169,64 @@ __ps0() {
   :
 }
 __ps1() {
-  ## exit status of last command
   local L="$?"
+  #[ "$LAST_CMD" -ne 0 ] && L="($LAST_CMD) " 
   if [ "$L" -eq 0 ]; then
     L=""
   else
     L="($L) "
   fi
-  local Crst='\033[0m'
-  local Cred='\033[31m'
-  local CBlu='\033[34m'
+  
+  local Crst='\[\033[0m\]'
+  local Cred='\[\033[31m\]'
+  local CBlu='\[\033[34m\]'
   local P='$'
   L="$Cred$L$Crst"
-  ##
 
-  ## colors
-  local r='\[\033[31m\]'
-  # separators, e.g.'@'
-  local g='\[\033[30m\]'
-  # hostname \h
-  local h='\[\033[34m\]'
-  # user \u
-  local u='\[\033[33m\]'
-  local p='\[\033[33m\]'
-  local w='\[\033[35m\]'
-  local b='\[\033[36m\]'
-  local x='\[\033[0m\]'
-  ##
+    local r='\[\033[31m\]'
+    # separators, e.g.'@'
+    local g='\[\033[30m\]'
+    # hostname \h
+    local h='\[\033[34m\]'
+    # user \u
+    local u='\[\033[33m\]'
+    local p='\[\033[33m\]'
+    local w='\[\033[35m\]'
+    local b='\[\033[36m\]'
 
-  ## python virtualenv
+    local wh='\[\033[97m\]'
+    local gr='\[\033[32m\]'
+    local ye='\[\033[33m\]'
+    local dg='\[\033[90m\]'
+    local pu='\[\033[35m\]'
+    local db='\[\033[34m\]'
+    local x='\[\033[0m\]'
+
+    local _ul='\[\033[4;37m\]'
+
+  # python virtualenv
   test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
-  ##
-
-  if test "${EUID}" == 0; then
-    P='#'
-    if test -n "${ZSH_VERSION}"; then
-      u='$F{red}'
-    else
-      u=$r
-    fi
-    p=$u
-  fi
 
   local dir;
-  if test "$PWD" = "$HOME"; then
-    dir='~'
-  else
-    dir="${PWD##*/}"
-    if test "${dir}" = _; then
-      dir=${PWD#*${PWD%/*/_}}
-      dir=${dir#/}
-    elif test "${dir}" = work; then
-      dir=${PWD#*${PWD%/*/work}}
-      dir=${dir#/}
-    fi
-  fi
-
-
-
-  ## detect when in in git controlled repo
   local B=$(git branch --show-current 2>/dev/null)
-  test "$dir" = "$B" && B='.'
+  # for another day 
+  # clickable link in gnome shell - make the git repos clickable!
+  # echo -e '\e]8;;http://example.com\aThis is a link\e]8;;\a'
 
-  test "$B" = master -o "$B" = main && b=$r
-  test -n "$B" && B="$b($b$B$b)"
-  ##
+  test "${PWD##*/}" = "$B" && B='.'
+  test "$B" = master -o "$B" = main && b="$gr$d"
+  [[ $(git config --get branch.master.remote) =~ "pvt" ]] && b="$_ul$b"
+  test -n "$B" && B="$x($b$B$x)"
 
-  local countme="$USER@$(hostname):$dir($B)\$ "
-  ## "smart" part
-  local short="$L$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
-  local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
-  local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
-
-  if test ${#countme} -gt "${PROMPT_MAX}"; then
-    PS1="$double"
-  elif test ${#countme} -gt "${PROMPT_LONG}"; then
-    PS1="$long"
-  else
-    PS1="$short"
-  fi
-  ##
+  PS1="$r$L$x$V$ye(\A) $pu\h$dg:$db\W$B$x\$ "
 }
 
 PROMPT_COMMAND="__ps1"
 
 # ----------------------------- keyboard -----------------------------
 
-test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
+# this is now special chars key
+# test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
 
 # ------------------------------ aliases -----------------------------
 
@@ -272,7 +242,6 @@ alias scripts='cd $SCRIPTS'
 alias free='free -h'
 alias df='df -h'
 alias chmox='chmod +x'
-#alias sshh='sshpass -f $HOME/.sshpass ssh '
 alias temp='cd $(mktemp -d)'
 alias view='vi -R' # which is usually linked to vim
 
@@ -284,9 +253,19 @@ alias gs='git status'
 alias gp='git push'
 alias gc='git commit'
 alias gca='git commit -a'
-alias co='git checkout'
+alias gco='git checkout'
+alias glo='git log --oneline'
+
+alias bpa='steck'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
+
+# -------------------- garbage --------------------
+
+#test -r ~/.bash_personal && source ~/.bash_personal
+#test -r ~/.bash_private && source ~/.bash_private
+#test -r ~/.bash_work && source ~/.bash_work
+
 
 # ------------------------------garbage-------------------------------
 export NVM_DIR="$HOME/.nvm"

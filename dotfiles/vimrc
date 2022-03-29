@@ -27,6 +27,8 @@ autocmd BufReadPost *
 
 "set statusline+=&filetype
 
+nmap <C-k> :tabnext<cr>
+nmap <C-j> :tabprevious<cr>
 " Fancy maps
 
 
