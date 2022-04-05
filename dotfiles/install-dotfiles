@@ -58,9 +58,4 @@ function do_install () {
 }
 
 do_install
-#case "$1" in
-#	diff) preflight; return "$?";;
-#	install) do_install;;
-#	*) printf "Didn't understand arg '%s'!\nExiting!!!\n" "$1";;
-#esac
 

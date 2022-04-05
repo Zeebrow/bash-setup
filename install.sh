@@ -20,7 +20,6 @@ function preflight() {
 
 function prep_home () {
   # dont count on XDG_ vars being set
-	mkdir -vp "$HOME/.local/bin/scripts"
 	mkdir -vp "$HOME/.local/bin/scripts/lib"
 	mkdir -vp "$HOME/.local/bin/scripts/completions"
 	mkdir -vp "$HOME/.local/etc"
@@ -51,13 +50,6 @@ function install_ssh () {
 	source ./ssh/install-ssh
 }
 
-function do_diffs () {
-	(( rtns=0 ))
-	install_dotfiles diff
-	rtns=$((rtns + "$?"))
-	# addl. diffs here
-}
-
 function do_installs() {
   prep_home
 	install_dotfiles install
@@ -70,10 +62,3 @@ function usage () {
 }
 
 do_installs
-
-#case "$1" in 
-#	all) do_installs ;;
-#	diff) do_diffs ;;
-#	*) usage ;;
-#esac
-#exit 0

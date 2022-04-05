@@ -1,8 +1,11 @@
+
 # --------------------------------------------------------------------
 case $- in
 *i*) ;; # interactive
 *) return ;; 
 esac
+# another way of saying the same thing, from debian's /etc/bash.bashrc
+#[ -z "$PS1" ] && return
 # ----------------------- environment variables ----------------------
 
 export GITUSER="$USER"
@@ -36,12 +39,20 @@ for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
   source "$HOME/.local/bin/scripts/libs/$lib"
 done
 # source completions
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
 for cmpl in `ls "$HOME/.local/bin/scripts/completions"`; do
   source "$HOME/.local/bin/scripts/completions/$cmpl"
 done
 ### rootless docker
-export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix:///run/user/1000/docker.sock
+#export PATH=/usr/bin:$PATH
+# nice to know I guess
+#export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
 
 # ---------------------------------XDG-------------------------------
