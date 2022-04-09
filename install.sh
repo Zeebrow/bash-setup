@@ -67,6 +67,13 @@ function install_vim () {
 
 }
 
+function configure_git () {
+  which git 2>&1 >> /dev/null
+  [ "$?" -gt 0 ] && echo git is not installed! && return 1
+  git config --global user.name Zeebrow
+  git config --global init.defaultBranch master
+}
+
 function install_ssh () {
 	mkdir -vp "$HOME/.ssh"
 	source ./ssh/install-ssh
@@ -74,6 +81,8 @@ function install_ssh () {
 
 function do_installs() {
   prep_home
+  install_vim
+  configure_git
 	install_dotfiles install
 	install_scripts
   install_completions
@@ -83,5 +92,4 @@ function usage () {
 	echo "${0##*/} [all|diff|help]"
 }
 
-#do_installs
-install_vim
+do_installs
