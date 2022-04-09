@@ -45,6 +45,28 @@ function install_dotfiles () {
 	source ./dotfiles/install-dotfiles
 }
 
+function install_vim () {
+  which vim 2>&1 >> /dev/null
+  [ "$?" -gt 0 ] && echo 'vim is not installed!' && return 1
+  local pkgman=''
+  if [ -e '/etc/fedora-release' -o -e '/etc/redhat-release' ]; then 
+    echo fedora detected
+    pkgman='dnf'
+  elif [ -e '/etc/debian_version' ]; then
+    echo debian detected
+    pkgman='apt'
+  else
+    echo "Could not install vim"
+  fi
+  if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
+    echo plug not installed
+     curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+     vim +'PlugInstall --sync' +qa
+  fi
+
+}
+
 function install_ssh () {
 	mkdir -vp "$HOME/.ssh"
 	source ./ssh/install-ssh
@@ -61,4 +83,5 @@ function usage () {
 	echo "${0##*/} [all|diff|help]"
 }
 
-do_installs
+#do_installs
+install_vim
