@@ -150,9 +150,10 @@ pathappend \
 
 # ------------------------------ cdpath ------------------------------
 
-export CDPATH=.:\
-~/repos/github.com/$GITUSER:\
-~
+# too much clutter in bash_completions
+#export CDPATH=.:\
+#~/repos/github.com/$GITUSER:\
+#~
 
 # ------------------------ bash shell options ------------------------
 #shopt -s direxpand
