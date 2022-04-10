@@ -25,9 +25,9 @@ function prep_home () {
 	mkdir -vp "$HOME/.local/etc"
 	mkdir -vp "$HOME/.local/var/run"
 	mkdir -vp "$HOME/.local/var/log"
-	mkdir -vp "$HOME/.local/share/go"
-		ln -vsf "$HOME/Documents/projects/go" "$HOME/.local/share/go"
-		ln -vs "$REPOS/go" "$HOME/.local/share/go"
+#	mkdir -vp "$HOME/.local/share/go"
+#		ln -vsf "$HOME/Documents/projects/go" "$HOME/.local/share/go"
+#		ln -vs "$REPOS/go" "$HOME/.local/share/go"
   mkdir -vp "$HOME/.local/lib/perl5"
   mkdir -vp "$HOME/.config/git"
 }
@@ -48,18 +48,18 @@ function install_dotfiles () {
 function install_vim () {
   which vim 2>&1 >> /dev/null
   [ "$?" -gt 0 ] && echo 'vim is not installed!' && return 1
-  local pkgman=''
-  if [ -e '/etc/fedora-release' -o -e '/etc/redhat-release' ]; then 
-    echo fedora detected
-    pkgman='dnf'
-  elif [ -e '/etc/debian_version' ]; then
-    echo debian detected
-    pkgman='apt'
-  else
-    echo "Could not install vim"
-  fi
+#  local pkgman=''
+#  if [ -e '/etc/fedora-release' -o -e '/etc/redhat-release' ]; then 
+#    echo fedora detected
+#    pkgman='dnf'
+#  elif [ -e '/etc/debian_version' ]; then
+#    echo debian detected
+#    pkgman='apt'
+#  else
+#    echo "Could not install vim"
+#  fi
   if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
-    echo plug not installed
+    echo installing vim plugins...
      curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
      vim +'PlugInstall --sync' +qa
@@ -70,8 +70,12 @@ function install_vim () {
 function configure_git () {
   which git 2>&1 >> /dev/null
   [ "$?" -gt 0 ] && echo git is not installed! && return 1
+  echo configuring git...
   git config --global user.name Zeebrow
   git config --global init.defaultBranch master
+  git config --global core.pager less
+  git config --global core.editor vim
+
 }
 
 function install_ssh () {
