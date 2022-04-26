@@ -18,6 +18,8 @@ colorscheme darkblue
 "colorscheme delek
 "colorscheme
 "set textwidth=72
+set relativenumber
+autocmd bufreadpre *.md set textwidth=79
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
