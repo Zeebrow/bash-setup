@@ -146,7 +146,13 @@ pathappend \
   /usr/bin \
   /snap/bin \
   /sbin \
-  /bin
+  /bin \
+
+# -_-
+#  /usr/local/cuda-11.6/bin
+#### cuda/conda shits
+#export LD_LIBRARY_PATH=/usr/local/cuda-11.6/lib64\
+#                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # ------------------------------ cdpath ------------------------------
 
@@ -230,7 +236,23 @@ __ps1() {
   [[ $(git config --get branch.master.remote) =~ "pvt" ]] && b="$_ul$b"
   test -n "$B" && B="$x($b$B$x)"
 
-  PS1="$r$L$x$V$ye(\A) $pu\h$dg:$db\W$B$x\$ "
+  # VPN status
+  # k
+  nmcli -t -f TYPE,STATE c s | grep -se '\(wireguard\)\|\(openvpn\)' | grep -e 'activated' 2>&1 >/dev/null
+  # 0 = yay found
+  activ=$?
+  _v=''
+  if [ "$activ" -eq 0 ]; then
+    _v='😎'
+  fi
+
+# the return code
+# whytho
+#  if [ "$activ" != '0' ]; then
+#    _v='😎'
+#  fi
+
+  PS1="$r$L$x$V$ye(\A) $pu\h$dg$_v:$db\W$B$x \$ "
 }
 
 PROMPT_COMMAND="__ps1"
@@ -269,6 +291,8 @@ alias gco='git checkout'
 alias glo='git log --oneline'
 
 alias bpa='steck'
+alias super='subsuper super'
+alias sub='subsuper sub'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
 
@@ -283,3 +307,19 @@ alias bpa='steck'
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/zeebrow/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/zeebrow/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/zeebrow/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/zeebrow/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
