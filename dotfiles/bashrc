@@ -238,7 +238,7 @@ __ps1() {
 
   # VPN status
   # k
-  nmcli -t -f TYPE,STATE c s | grep -se '\(wireguard\)\|\(openvpn\)' | grep -e 'activated' 2>&1 >/dev/null
+  nmcli -t -f TYPE,STATE c s 2> /dev/null | grep -se '\(wireguard\)\|\(openvpn\)' | grep -e 'activated' 2>&1 >/dev/null
   # 0 = yay found
   activ=$?
   _v=''
@@ -293,6 +293,7 @@ alias glo='git log --oneline'
 alias bpa='steck'
 alias super='subsuper super'
 alias sub='subsuper sub'
+alias toxic='toxic -c ~/.local/share/toxic/toxic.conf'
 # ----------------------------- functions ----------------------------
 # see $SCRIPTS/lib
 
