@@ -2,8 +2,6 @@
 # 
 # install bash dotfiles in $HOME
 
-[ -f ../shell-libraries/log.sh ] &&  source ../shell-libraries/log.sh
-echo "installing dotfiles for $USER..."
 
 # want backup
 unset -f backup
@@ -13,16 +11,13 @@ backup() {
   for i in "$@"; do cp -v "$1" "$1$_SFX"; done
 }
 
-test -d $HOME/.local/bin/scripts && export PATH=$PATH:$HOME/.local/bin/scripts
-
+# wat
 this_script=${BASH_SOURCE/*\//}
 this_script=${this_script/\//}
-
 if [ "$0" == "$BASH_SOURCE" ]; then
 	_bn="`pwd`/$(basename $0)"
 	_rp="$(realpath $0)"
 	[ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
-	echo installing scripts
 	this_dir=`pwd`
 else
 	# echo "this was sourced"
@@ -37,19 +32,10 @@ function debug () {
 	this_script=${this_script/\//}
 	echo "this script: $this_script"
 }
+# /wat
 
-function preflight (){
-	let rtn=0
-	for script in `ls $this_dir`; do
-		[ "$script" == "$this_script" ] && continue
-		diff "$script" "$HOME/.$script" > /dev/null 2>&1
-		[ "$?" -gt 0 ] && log 2 "$script differs from $HOME/.$script" && rtn=$((rtn + 1))
-	done
-	return "$rtn"
-}
-
-function do_install () {
-	
+function do_install() {
+  echo "installing dotfiles for $USER..."
 	for script in `ls $this_dir`; do
 		[ "$script" == "$this_script" ] && continue
 		test -e $HOME/.$script && backup $HOME/.$script
@@ -57,5 +43,28 @@ function do_install () {
 	done
 }
 
-do_install
+function do_diff() {
+  local different_files=()
+  _cwd=$(realpath $1)
+
+  dir1=($(ls -1 "$_cwd" ))
+  dir1=(${dir1[*]/install-dotfiles/})
+  dir2=($(echo ${dir1[*]/dot_/.}))
+
+  for f in "${dir1[@]}"; do
+    diff -q $(realpath "$f") "$HOME/.$f" 2>&1 >> /dev/null
+    [ "$?" -ne 0 ] && different_files+=("$f")
+  done
+  for difff in "${different_files[@]}"; do
+    echo "" >/dev/null
+    #echo "diff $(realpath $difff) $HOME/.$difff"
+  done
+  return "${#different_files[*]}"
+}
+
+case "$1" in
+	diff) do_diff '.' $HOME; exit "$?";;
+	install) do_install;;
+	*) echo "install-dotfiles diff|install" && exit 1;;
+esac
 
