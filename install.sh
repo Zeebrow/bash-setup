@@ -40,10 +40,11 @@ function install_dotfiles () {
 function configure_vim() {
   which vim 2>&1 >> /dev/null
   [ "$?" -gt 0 ] && echo 'vim is not installed!' && return 1
-  if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
-    echo installing vim plugins...
-     curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  if [ -e "$HOME/.vim/autoload/plug.vim" ]; then
+    vim +PlugUpdate +qall
+  else
+    curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
      vim +'PlugInstall --sync' +qa
   fi
 }
