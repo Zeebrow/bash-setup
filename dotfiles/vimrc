@@ -31,6 +31,9 @@ autocmd BufReadPost *
 
 nmap <C-k> :tabnext<cr>
 nmap <C-j> :tabprevious<cr>
+
+" <C-@> is ctrl-space - completion for omnifunc, vim-go
+inoremap <C-@> <C-x><C-o>
 " Fancy maps
 
 

@@ -15,7 +15,7 @@ _rp=$(realpath "$0")
 [ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
 
 function prep_home () {
-	mkdir -vp "$HOME/.local/bin/scripts/lib"
+	mkdir -vp "$HOME/.local/bin/scripts/libs"
 	mkdir -vp "$HOME/.local/bin/scripts/completions"
 	mkdir -vp "$HOME/.local/etc"
 	mkdir -vp "$HOME/.local/var/run"
