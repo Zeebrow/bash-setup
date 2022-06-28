@@ -64,18 +64,39 @@ function configure_git () {
 }
 
 function do_installs() {
+  banner 'prep home'
   prep_home
+  banner 'vim'
   configure_vim
+  banner 'git'
   configure_git
+  banner 'dotfiles'
 	install_dotfiles install
+  banner 'scripts'
 	install_scripts
+  banner 'competions'
   install_completions
+}
+
+function banner() {
+  header=$1
+  sep=$(echo "(( $(tput cols) - ${#header}) / 2) - 1" | bc)
+  printf "%0.s-" $(seq 1 "$sep")
+  printf "%s" "$header"
+  printf "%0.s-" $(seq 1 "$sep")
+  [ $(echo "${#header} %2" | bc) -eq 0 ] && printf "%s" '-'
+  echo
+}
+
+function lineof() { 
+	for i in `seq 1 $(tput cols)`; do printf "$1"; done 
 }
 
 function do_diffs() {
   let _rc=0
-  cd dotfiles 
-  ./install-dotfiles diff
+  #cd dotfiles 
+  banner 'dotfiles'
+  dotfiles/install-dotfiles.sh diff
   rc=$((_rc + $?))
   return "$_rc"
 }
