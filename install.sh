@@ -47,6 +47,10 @@ function configure_vim() {
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
      vim +'PlugInstall --sync' +qa
   fi
+  go version  >/dev/null
+  if [ "$?" -eq 0 ]; then 
+    vim +'GoInstallBinaries' +qa
+  fi
 }
 
 function configure_git () {

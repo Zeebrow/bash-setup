@@ -1,5 +1,6 @@
 set nocompatible
 set number
+set relativenumber
 set ruler
 " set mouse=a
 set tabstop=2
@@ -18,45 +19,24 @@ colorscheme darkblue
 "colorscheme delek
 "colorscheme
 "set textwidth=72
-set relativenumber
-autocmd bufreadpre *.md set textwidth=79
 
+let mapleader="\\"
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
 
-"set statusline+=&filetype
+autocmd bufreadpre *.md,*.txt set textwidth=79
+au BufNewFile,BufRead *.py set textwidth=120 
+"au BufNewFile,BufRead *.py,*.go match BadWhitespace /\s\+$/
 
 nmap <C-k> :tabnext<cr>
 nmap <C-j> :tabprevious<cr>
 
-" <C-@> is ctrl-space - completion for omnifunc, vim-go
 inoremap <C-@> <C-x><C-o>
-" Fancy maps
-
-
-
-
-
-" disable arrow keys (vi muscle memory)
-" because you're bold and daring
-" noremap <up> :echoerr "Umm, use k instead"<CR>
-" noremap <down> :echoerr "Umm, use j instead"<CR>
-" noremap <left> :echoerr "Umm, use h instead"<CR>
-" noremap <right> :echoerr "Umm, use l instead"<CR>
-" inoremap <up> <NOP>
-" inoremap <down> <NOP
-" inoremap <left> <NOP>
-" inoremap <right> <NOP>
-"
 
 " github.com/junegunn/vim-plug
-
-"syntax on
-"filetype plugin indent on
-
 " vim plug plugins
 if filereadable(expand('~/.vim/autoload/plug.vim'))
 
@@ -87,27 +67,22 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
   let g:jedi#popup_on_dot = 0
   let g:jedi#show_call_signatures = 0
 
-
-
-
-
   let g:ansible_unindent_after_newline = 1
   let g:polygot_disabled = ['python']
 
 
   " python-mode plugin
-  "
-  let g:pymode = 1
-  let g:pymode_warnings = 1
+  "let g:pymode = 1
+  "let g:pymode_warnings = 1
   " maintaining virtualenv on our own
-  let g:pymode_virtualenv = 0
-  let g:pymode_rope = 1
-  let g:pymode_rope_completion = 1
-  let g:pymode_rope_completion_bind = '<C-Space>'
+  "let g:pymode_virtualenv = 0
+  "let g:pymode_rope = 1
+  "let g:pymode_rope_completion = 1
+  "let g:pymode_rope_completion_bind = '<C-Space>'
   " code completion
   " this is easy mode - it will slow down vim if it has to traverse 
   " parent directories to find .ropeproject
-  let g:pymode_rope_lookup_project = 1
+  "let g:pymode_rope_lookup_project = 1
 endif
 
 
