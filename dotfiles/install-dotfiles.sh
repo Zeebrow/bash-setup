@@ -31,9 +31,14 @@ function do_diff() {
   local different_files=()
   
   for f in "${tgt_files[@]}"; do
-    diff -q "$working_files_dir/.${f##*/}" "$f" 
-    [ "$?" -ne 0 ] && different_files+=("$f")
+    diff -q "$working_files_dir/.${f##*/}" "$f" >/dev/null
+    if [ "$?" -ne 0 ]; then
+      echo "[${f##*/}]"
+      different_files+=("$f")
+      echo "diff $working_files_dir/.${f##*/} $f"
+    fi
   done
+
   return "${#different_files[*]}"
 }
 
