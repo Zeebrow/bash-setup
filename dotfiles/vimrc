@@ -1,3 +1,5 @@
+"source ~/.vim/autoload/xyz.vim
+nmap <C-_> :call xyz#ToggleCopyable()<cr>
 set nocompatible
 set number
 set relativenumber
@@ -20,7 +22,6 @@ colorscheme darkblue
 "colorscheme
 "set textwidth=72
 
-let mapleader="\\"
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -28,7 +29,7 @@ autocmd BufReadPost *
      \ endif
 
 autocmd bufreadpre *.md,*.txt set textwidth=79
-au BufNewFile,BufRead *.py set textwidth=120 
+au BufNewFile,BufRead *.py set textwidth=420
 "au BufNewFile,BufRead *.py,*.go match BadWhitespace /\s\+$/
 
 nmap <C-k> :tabnext<cr>

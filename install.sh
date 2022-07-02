@@ -51,6 +51,9 @@ function configure_vim() {
   if [ "$?" -eq 0 ]; then 
     vim +'GoInstallBinaries' +qa
   fi
+  for f in vim/autoload/*; do
+    cp "$f" "$HOME/.vim/autoload"
+  done
 }
 
 function configure_git () {
