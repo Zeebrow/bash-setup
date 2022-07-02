@@ -111,7 +111,7 @@ fi
 
 pathappend() {
   for ARG in "$@"; do
-    test -d "${ARG}" || continue
+    #test -d "${ARG}" || continue
     PATH=${PATH//:${ARG}:/:}
     PATH=${PATH/#${ARG}:/}
     PATH=${PATH/%:${ARG}/}
@@ -121,7 +121,7 @@ pathappend() {
 
 pathprepend() {
   for ARG in "$@"; do
-    test -d "${ARG}" || continue
+    #test -d "${ARG}" || continue
     PATH=${PATH//:${ARG}:/:}
     PATH=${PATH/#${ARG}:/}
     PATH=${PATH/%:${ARG}/}
