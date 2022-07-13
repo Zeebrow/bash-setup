@@ -23,6 +23,7 @@ this_script=${BASH_SOURCE/*\//}
 this_script=${this_script/\//}
 
 if [ "$0" == "$BASH_SOURCE" ]; then
+  # this script was invoked directly with ./
 	_bn="`pwd`/$(basename $0)"
 	_rp="$(realpath $0)"
 	[ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
@@ -33,10 +34,14 @@ else
 	this_dir=$(pwd)/scripts
 fi
 
-echo installing scripts...
-test -d $SCRIPTS || mkdir -vp $SCRIPTS
-test -d $SCRIPTS/libs || mkdir -vp $SCRIPTS/libs
-for script in `ls $this_dir`; do
-	[ "$script" == "$this_script" ] && continue
-	cp -v $this_dir/$script $SCRIPTS
-done
+function do_install(){
+  echo installing scripts...
+  test -d $SCRIPTS || mkdir -vp $SCRIPTS
+  test -d $SCRIPTS/libs || mkdir -vp $SCRIPTS/libs
+  for script in `ls $this_dir`; do
+    [ "$script" == "$this_script" ] && continue
+    cp -v $this_dir/$script $SCRIPTS
+  done
+}
+
+do_install

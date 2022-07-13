@@ -2,3 +2,4 @@ _README.md
 tmp/*
 tmp/**/*
 **/*.swp
+**/*.swo

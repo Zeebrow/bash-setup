@@ -3,4 +3,4 @@
 #export PATH=$PATH:/usr/local/go/bin
 #export PATH=$PATH:$HOME/.local/bin/scripts
 source $HOME/.bashrc
-
+complete -C '/usr/local/bin/aws_completer' aws

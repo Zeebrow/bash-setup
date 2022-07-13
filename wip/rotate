@@ -1,0 +1,95 @@
+#!/bin/bash
+
+declare -a keynames
+declare -A key_filepath
+
+function _init_get_user_keys () {
+  shopt -s globstar
+  local pubs=(`ls $HOME/.ssh/*.pub`)
+  for i in "${pubs[@]}"; do 
+    keynames+=("${i##*/}")
+    key_filepath["${i##*/}"]="$i"
+  done
+  # fail if there aren't any keys
+  [ "${#pubs}" -eq 0 ] && echo "User $USER does not have any ssh keys!" && exit 1
+}
+
+function list_user_keys () {
+  # a bit flamboyant, perhaps
+  for k in `seq ${#keynames[*]}`; do
+    printf "%d) %s\n" "$k" "${keynames[$((k-1))]}"
+  done
+  echo ---
+  for i in "${!key_filepath[@]}"; do
+    echo "- ${i}: '${key_filepath[$i]}'"
+  done
+}
+
+
+# pass a valid private key filename (convention 
+# being public keyfile = private keyfile + .pub) as first arg 
+# the remainder go to rotate()
+function rotate_wrapper () {
+  function timer () {
+  local let _to=${1:-5}
+  for tick in `seq $_to -1 1`; do
+    printf "(ctrl-c to abort) Rotating ssh key '%s' in %d...\r" "$key" "$tick"
+    sleep 1
+  done
+  echo
+  }
+
+  local key=""
+  if [ "$#" -lt 1 ]; then
+    echo "Select a key to retire and regenerate (ctrl-c to abort):"
+    select key in `printf "%s" "${keynames[*]}"`; do
+      break
+    done
+  else
+    local tgt_key="$1"; shift
+  fi
+  timer 
+  rotate "$key" "$@"
+}
+function rotate () {
+  set -ex
+  local k="$1"
+  local _bkup="${2:-$(mktemp -d)}"
+
+  # prevent stupidity with obscurity (stupidity).
+  [[ ${FUNCNAME[@]} =~ rotate_wrapper ]] || (echo no && exit 1)
+  [ ! -d "$_bkup" ] && echo "invalid dir '$_bkup'" && exit 1
+  bkup_loc=${_bkup:-$(mktemp -d)}
+  c=$(cat "${key_filepath[$k]}" | cut -d' ' -f3- )
+  #mv -v "${key_filepath[$k]%.pub}" "${key_filepath[$k]}" "$bkup_loc"
+  rm -f "${key_filepath[$k]%.pub}" "${key_filepath[$k]}" "$bkup_loc"
+  ssh-keygen -q -t rsa -C "$c" -N "" -f "$HOME/.ssh/${k%.pub}"
+  echo done
+  #echo "backups located at $bkup_loc"
+  exit 0
+}
+
+function do_rotate () {
+  rotate_wrapper "$@"
+#  local OPTIND o b f
+#  function usage(){ echo "${0##*/} [-b [-f KEYFILE.pub]] | -h"; }
+#  while getopts "b:f:h" o; do
+#    case "$o" in
+#      b) BKUP_DIR=${OPTARG};;
+#      f) KEYFILE=${OPTARG};;
+#      h|*) usage; exit 1;;
+#    esac
+#  done
+#
+#  rotate_wrapper "$f" "$b"
+}
+
+_init_get_user_keys
+case "$1" in
+  [-l|--list]) list_user_keys; exit 0;;
+  [-h|--help]) usage; exit 0;;
+  *) do_rotate "$@";;
+esac
+
+
+

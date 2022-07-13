@@ -1,8 +1,11 @@
+
 # --------------------------------------------------------------------
 case $- in
 *i*) ;; # interactive
 *) return ;; 
 esac
+# another way of saying the same thing, from debian's /etc/bash.bashrc
+#[ -z "$PS1" ] && return
 # ----------------------- environment variables ----------------------
 
 export GITUSER="$USER"
@@ -14,30 +17,55 @@ export EDITOR=vi
 export VISUAL=vi
 export EDITOR_PREFIX=vi
 
+export PERL5LIB="$HOME/.local/lib/perl5"
+
 export PYTHONDONTWRITEBYTECODE=1
 
 test -d ~/.vim/spell && export VIMSPELL=(~/.vim/spell/*.add)
 
-export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
-export GOPATH=~/.local/share/go
-export GOBIN=~/.local/bin
+#export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
+#export GOPATH=/home/zeebrow/.local/share/go
+export GOPATH=/home/zeebrow/go
+export GOROOT=/usr/local/go
+#export GOBIN=~/.local/bin
 export GOPROXY=direct
-export CGO_ENABLED=0
+#export CGO_ENABLED=0
 
 export MYREPOS="$HOME/repos/github.com/$USER"
 export SANDBOX="$HOME/sandbox"
 
+# TODO questionable
+for lib in `ls "$HOME/.local/bin/scripts/libs"`; do
+  source "$HOME/.local/bin/scripts/libs/$lib"
+done
+# source completions
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+for cmpl in `ls "$HOME/.local/bin/scripts/completions"`; do
+  source "$HOME/.local/bin/scripts/completions/$cmpl"
+done
+### rootless docker
+#export PATH=/usr/bin:$PATH
+# nice to know I guess
+#export DOCKER_HOST=unix:///run/user/1000/docker.sock
+
+
 # ---------------------------------XDG-------------------------------
 # All default unless otherwise noted
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
-XDG_DATA_HOME="$HOME/.local/share"
-XDG_CONFIG_HOME="$HOME/.config"
-XDG_STATE_HOME="$HOME/.local/state"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
 
 # for XDG_*_DIRS, the first directory takes presedence, which is the opposite of PATH
-XDG_DATA_DIRS=/usr/local/share/:/usr/share/
-XDG_CONFIG_DIRS=/etc/xdg
-XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_DIRS=/usr/local/share/:/usr/share/
+export XDG_CONFIG_DIRS=/etc/xdg
+export XDG_CACHE_HOME="$HOME/.cache"
 # tricky one. From the docs:
 # "Files in this directory MAY be subjected to periodic clean-up. 
 # To ensure that your files are not removed, they should have their access time timestamp modified
@@ -83,7 +111,7 @@ fi
 
 pathappend() {
   for ARG in "$@"; do
-    test -d "${ARG}" || continue
+    #test -d "${ARG}" || continue
     PATH=${PATH//:${ARG}:/:}
     PATH=${PATH/#${ARG}:/}
     PATH=${PATH/%:${ARG}/}
@@ -93,7 +121,7 @@ pathappend() {
 
 pathprepend() {
   for ARG in "$@"; do
-    test -d "${ARG}" || continue
+    #test -d "${ARG}" || continue
     PATH=${PATH//:${ARG}:/:}
     PATH=${PATH/#${ARG}:/}
     PATH=${PATH/%:${ARG}/}
@@ -118,13 +146,20 @@ pathappend \
   /usr/bin \
   /snap/bin \
   /sbin \
-  /bin
+  /bin \
+
+# -_-
+#  /usr/local/cuda-11.6/bin
+#### cuda/conda shits
+#export LD_LIBRARY_PATH=/usr/local/cuda-11.6/lib64\
+#                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # ------------------------------ cdpath ------------------------------
 
-export CDPATH=.:\
-~/repos/github.com/$GITUSER:\
-~
+# too much clutter in bash_completions
+#export CDPATH=.:\
+#~/repos/github.com/$GITUSER:\
+#~
 
 # ------------------------ bash shell options ------------------------
 #shopt -s direxpand
@@ -152,90 +187,80 @@ __ps0() {
   :
 }
 __ps1() {
-  local P='$'
-
-  if test "$(uname)" = "Darwin"; then
-    #export LSCOLORS=ExGxFxdxCxDxDxxbaDecac
-    local r='\[\033[31m\]'
-    local g=$(tput setaf 237)
-    #local g='\[\033[52m\]'
-    local gh='\[\033[52m\]'
-    local h=$(tput setaf 24)
-    #local h='\[\033[94m\]'
-    local u='\[\033[90m\]'
-    local p='\[\033[37m\]'
-    local w='\[\033[34m\]'
-    local b='\[\033[36m\]'
-    local x='\[\033[0m\]'
+  local L="$?"
+  #[ "$LAST_CMD" -ne 0 ] && L="($LAST_CMD) " 
+  if [ "$L" -eq 0 ]; then
+    L=""
   else
+    L="($L) "
+  fi
+  
+  local Crst='\[\033[0m\]'
+  local Cred='\[\033[31m\]'
+  local CBlu='\[\033[34m\]'
+  local P='$'
+  L="$Cred$L$Crst"
+
     local r='\[\033[31m\]'
+    # separators, e.g.'@'
     local g='\[\033[30m\]'
+    # hostname \h
     local h='\[\033[34m\]'
+    # user \u
     local u='\[\033[33m\]'
     local p='\[\033[33m\]'
     local w='\[\033[35m\]'
     local b='\[\033[36m\]'
+
+    local wh='\[\033[97m\]'
+    local gr='\[\033[32m\]'
+    local ye='\[\033[33m\]'
+    local dg='\[\033[90m\]'
+    local pu='\[\033[35m\]'
+    local db='\[\033[34m\]'
     local x='\[\033[0m\]'
-  fi
+
+    local _ul='\[\033[4;37m\]'
 
   # python virtualenv
   test -n "$VIRTUAL_ENV" && local V="(${VIRTUAL_ENV##*/}) "
 
-  if test "${EUID}" == 0; then
-    P='#'
-    if test -n "${ZSH_VERSION}"; then
-      u='$F{red}'
-    else
-      u=$r
-    fi
-    p=$u
-  fi
-
   local dir;
-  if test "$PWD" = "$HOME"; then
-    dir='~'
-  else
-    dir="${PWD##*/}"
-    if test "${dir}" = _; then
-      dir=${PWD#*${PWD%/*/_}}
-      dir=${dir#/}
-    elif test "${dir}" = work; then
-      dir=${PWD#*${PWD%/*/work}}
-      dir=${dir#/}
-    fi
-  fi
-
   local B=$(git branch --show-current 2>/dev/null)
-  test "$dir" = "$B" && B='.'
-  local countme="$USER@$(hostname):$dir($B)\$ "
+  # for another day 
+  # clickable link in gnome shell - make the git repos clickable!
+  # echo -e '\e]8;;http://example.com\aThis is a link\e]8;;\a'
 
-  test "$B" = master -o "$B" = main && b=$r
-  test -n "$B" && B="$b($b$B$b)"
+  test "${PWD##*/}" = "$B" && B='.'
+  test "$B" = master -o "$B" = main && b="$gr$d"
+  [[ $(git config --get branch.master.remote) =~ "pvt" ]] && b="$_ul$b"
+  test -n "$B" && B="$x($b$B$x)"
 
-  if test -n "${ZSH_VERSION}"; then
-    local short="$V$u%n$g@$h%m$g:$w$dir$B$p$P$x "
-    local long="$V$g╔ $u%n$g@%m\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$V$g╔ $u%n$g@%m\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
-  else
-    local short="$V$u\u$g@$h\h$g:$w$dir$B$p$P$x "
-    local long="$V$g╔ $u\u$g@$h\h$g:$w$dir$B\n$g╚ $p$P$x "
-    local double="$V$g╔ $u\u$g@$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
+  # VPN status
+  # k
+  nmcli -t -f TYPE,STATE c s 2> /dev/null | grep -se '\(wireguard\)\|\(openvpn\)' | grep -e 'activated' 2>&1 >/dev/null
+  # 0 = yay found
+  activ=$?
+  _v=''
+  if [ "$activ" -eq 0 ]; then
+    _v='😎'
   fi
 
-  if test ${#countme} -gt "${PROMPT_MAX}"; then
-    PS1="$double"
-  elif test ${#countme} -gt "${PROMPT_LONG}"; then
-    PS1="$long"
-  else
-    PS1="$short"
-  fi
+# the return code
+# whytho
+#  if [ "$activ" != '0' ]; then
+#    _v='😎'
+#  fi
+
+  PS1="$r$L$x$V$ye(\A) $pu\h$dg$_v:$db\W$B$x \$ "
 }
 
 PROMPT_COMMAND="__ps1"
 
 # ----------------------------- keyboard -----------------------------
 
-test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
+# this is now special chars key
+# test -n "$DISPLAY" && setxkbmap -option caps:escape &>/dev/null
 
 # ------------------------------ aliases -----------------------------
 
@@ -251,9 +276,51 @@ alias scripts='cd $SCRIPTS'
 alias free='free -h'
 alias df='df -h'
 alias chmox='chmod +x'
-#alias sshh='sshpass -f $HOME/.sshpass ssh '
 alias temp='cd $(mktemp -d)'
 alias view='vi -R' # which is usually linked to vim
 
 which vim &>/dev/null && alias vi=vim
+
+alias repos='cd $MYREPOS'
+alias sandbox='cd $SANDBOX'
+alias gs='git status'
+alias gp='git push'
+alias gc='git commit'
+alias gca='git commit -a'
+alias gco='git checkout'
+alias glo='git log --oneline'
+
+alias bpa='steck'
+alias super='subsuper super'
+alias sub='subsuper sub'
+alias toxic='toxic -c ~/.local/share/toxic/toxic.conf'
+# ----------------------------- functions ----------------------------
+# see $SCRIPTS/lib
+
+# -------------------- garbage --------------------
+
+#test -r ~/.bash_personal && source ~/.bash_personal
+#test -r ~/.bash_private && source ~/.bash_private
+#test -r ~/.bash_work && source ~/.bash_work
+
+
+# ------------------------------garbage-------------------------------
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/zeebrow/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/zeebrow/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/zeebrow/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/zeebrow/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 

@@ -1,0 +1,96 @@
+#!/bin/bash
+
+DBFILE="$HOME/.local/share/supersub.txt"
+DB=$(cat <<EODB
+0 ₀ ⁰
+1 ₁ ¹
+2 ₂ ²
+3 ₃ ³
+4 ₄ ⁴
+5 ₅ ⁵
+6 ₆ ⁶
+7 ₇ ⁷
+8 ₈ ⁸
+9 ₉ ⁹
+A ? ᴬ
+B ? ᴮ
+C ? ᶜ
+D ? ᴰ
+E ? ᴱ
+F ? ᴲ
+G ? ᴳ
+H ? ᴴ
+I ? ᴵ
+J ? ᴶ
+K ? ᴷ
+L ? ᴸ
+M ? ᴹ
+N ? ᴺ
+O ? ᴼ
+P ? ᴾ
+Q ? ᵠ
+R ? ᴿ
+S ? ˢ
+T ? ᵀ
+U ? ᵁ
+V ? ⱽ
+W ? ᵂ
+X ? ˣ
+Y ? ʸ
+Z ? ᶻ
+a ₐ ᵃ
+b ᵦ ᵇ
+c ? ᶜ
+d ₜ ᵈ
+e ₑ ᵉ
+f ? ᶠ
+g ? ᵍ
+h ₕ ʰ
+i ᵢ ⁱ
+j ⱼ ʲ
+k ₖ ᵏ
+l ₗ ˡ
+m ₘ ᵐ
+n ₙ ⁿ
+o ₒ ᵒ
+p ₚ ᵖ
+q ᵩ ᵠ
+r ᵣ ʳ
+s ₛ ˢ
+t ₜ ᵗ
+u ᵤ ᵘ
+v ᵥ ᵛ
+w ? ʷ
+x ₓ ˣ
+y ᵧ ʸ
+z ? ᶻ
+EODB
+)
+
+usage() {
+  echo 'subsuper sup|super MESSAGE'
+  exit 1
+}
+
+subscript(){
+  while IFS='$\n' read -r l; do
+    #grep "$l" "$DBFILE" | cut -d ' ' -f2 | tr -d '\n'
+    echo "$DB" | grep "$l" | cut -d ' ' -f2 | tr -d '\n'
+  done < <(echo $@ | grep -o .)
+  return
+}
+
+superscript(){
+  while IFS='$\n' read -r l; do
+    echo "$DB" | grep "$l" | cut -d ' ' -f3 | tr -d '\n'
+  done < <(echo $@ | grep -o .)
+  return 
+}
+
+case "$1" in
+  sub)
+    shift; subscript "$@";;
+  super)
+    shift; superscript "$@";;
+  *) usage;;
+esac

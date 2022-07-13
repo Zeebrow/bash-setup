@@ -2,7 +2,6 @@
 #
 # Add line below to crontab
 # @reboot /home/zeebrow/.local/bin/scripts/on-boot
-THIS_SCRIPT=
 
 function rake_sand () {
 	/usr/bin/test -d /home/zeebrow/sandbox || exit 0 
@@ -15,3 +14,5 @@ function rake_sand () {
 function cronify () {
 	crontab -l 
 }
+
+rake_sand
