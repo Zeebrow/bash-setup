@@ -1,18 +1,6 @@
 #!/bin/bash
-
-function debug () {
-	echo "$0"
-	echo "$BASH_SOURCE"
-	basename "$0"
-	pwd
-	realpath "$0"
-	realpath "$BASH_SOURCE"
-	echo "-------------"
-}
-
-_bn=$(pwd)/$(basename "$0")
-_rp=$(realpath "$0")
-[ "$_bn" != "$_rp" ] && echo "Must be run from same directory. Exiting!" &&  exit 1
+this_dir=$(realpath "$0")
+this_dir=$(dirname "$this_dir")
 
 function prep_home () {
 	mkdir -vp "$HOME/.local/bin/scripts/libs"
@@ -25,16 +13,19 @@ function prep_home () {
 }
 
 function install_scripts () {
-	source ./shell-libraries/install-libs.sh
-	source ./scripts/install-scripts
+	echo 'AAAAAA source ./shell-libraries/install-libs.sh'
+	#works on my machine
+	"$this_dir/scripts/install-scripts"
 }
 
 function install_completions () {
-  cp -v completions/*.bash "$HOME/.local/bin/scripts/completions"
+	mkdir -vp "$HOME/.local/bin/scripts/completions"
+  cp -v "$this_dir/completions/*.bash" "$HOME/.local/bin/scripts/completions"
 }
 
 function install_dotfiles () {
-	source ./dotfiles/install-dotfiles
+	#works on my machine
+	"$this_dir/dotfiles/install-dotfiles.sh"
 }
 
 function configure_vim() {
@@ -74,7 +65,7 @@ function do_installs() {
   banner 'git'
   configure_git
   banner 'dotfiles'
-	install_dotfiles install
+	install_dotfiles.sh install
   banner 'scripts'
 	install_scripts
   banner 'competions'
